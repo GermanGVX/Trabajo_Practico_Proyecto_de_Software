@@ -1,0 +1,6 @@
+@Trabajo_Practoco_Proyecto_de_Software_HostAddress = http://localhost:5217
+
+GET {{Trabajo_Practoco_Proyecto_de_Software_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
