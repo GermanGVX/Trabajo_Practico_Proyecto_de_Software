@@ -17,3 +17,4 @@ C:\Users\gerva\source\repos\Proyecto_de_Software\TP1\Infrastructure\obj\Debug\ne
 C:\Users\gerva\source\repos\Proyecto_de_Software\TP1\Infrastructure\obj\Debug\net8.0\Infrastructure.pdb
 C:\Users\gerva\source\repos\Proyecto_de_Software\TP1\Infrastructure\obj\Debug\net8.0\Infrastructure.genruntimeconfig.cache
 C:\Users\gerva\source\repos\Proyecto_de_Software\TP1\Infrastructure\obj\Debug\net8.0\ref\Infrastructure.dll
+C:\Users\gerva\source\repos\Proyecto_de_Software\TP1\Infrastructure\obj\Debug\net8.0\Infrastructure.sourcelink.json

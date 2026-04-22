@@ -7,24 +7,18 @@ using System.Threading.Tasks;
 namespace Domain.Entities
 {
 
-    public enum SeatStatus
+    
+    public class SEAT
     {
-        Available,
-        Reserved,
-        Sold
-
-    }
-    public class Seat
-    {
-        public Guid id {  get; set; }
+        public Guid Id {  get; set; }
         public int SectorId { get; set; }
-        public string Rowldentifier { get; set; }
+        public string RowIdentifier { get; set; }
         public int SeatNumber { get; set; }
-        public SeatStatus status { get; set; } = SeatStatus.Available;
+        public string Status { get; set; } // Available,Reserved,Sold
         public int Version { get; set; }
 
-        public Sector sector { get; set; } = null!;
-        public Reservation? Activereservation { get; set; }
+        public SECTOR    sector { get; set; } = null!;
+        public RESERVATION? Activereservation { get; set; }
 
     }
 }

@@ -13,3 +13,4 @@ C:\Users\gerva\source\repos\Proyecto_de_Software\TP1\Application\obj\Debug\net8.
 C:\Users\gerva\source\repos\Proyecto_de_Software\TP1\Application\obj\Debug\net8.0\refint\Application.dll
 C:\Users\gerva\source\repos\Proyecto_de_Software\TP1\Application\obj\Debug\net8.0\Application.pdb
 C:\Users\gerva\source\repos\Proyecto_de_Software\TP1\Application\obj\Debug\net8.0\ref\Application.dll
+C:\Users\gerva\source\repos\Proyecto_de_Software\TP1\Application\obj\Debug\net8.0\Application.sourcelink.json

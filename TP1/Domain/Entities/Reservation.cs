@@ -6,24 +6,20 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public enum ReservationStatus
-    {
-        Pending,
-        Paid,
-        Expired
-    }
-    public class Reservation
+   
+    public class RESERVATION
     {
         public Guid Id {  get; set; }
         public int UserId { get; set; }
-        public int SeatId { get; set; }
-        public ReservationStatus status { get; set; } = ReservationStatus.Pending;
+        public Guid SeatId { get; set; }
+        public string Status { get; set; } //  Pending,Paid, Expired
         public DateTime ReservedAt { get; set; }
         public DateTime ExpiresAt { get; set; }
 
-        public Seat seat { get; set; } = null!;
+        public SEAT seat { get; set; } = null!;
 
-        public User user { get; set; } = null!;
+        public USER user { get; set; } = null!;
+        
 
 
     }
