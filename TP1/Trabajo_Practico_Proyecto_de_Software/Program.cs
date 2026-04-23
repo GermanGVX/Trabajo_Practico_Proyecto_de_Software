@@ -1,6 +1,9 @@
+using Application.Interface;
 using Application.Interfaces;
+using Application.UseCases.Events.Handlers;
 using Application.UseCases.Events.Querys;
 using Infrastructure.Persistence;
+using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,9 +24,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddTransient<IServicesGetAll, GetAllEventsQuery>();
 
+builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 
-
-
+builder.Services.AddScoped<ICreateEventCommandHandler, CreateEventCommandHandler>();
 
 
 var app = builder.Build();
