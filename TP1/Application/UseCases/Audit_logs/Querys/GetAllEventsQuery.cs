@@ -7,7 +7,7 @@ using Application.Interfaces;
 
 namespace Application.UseCases.Events.Querys
 {
-    public class GetAllAudit_logQuery : IServicesGetAll
+    public class GetAllAudit_logQuery 
     {
         public object GetAll()
         {

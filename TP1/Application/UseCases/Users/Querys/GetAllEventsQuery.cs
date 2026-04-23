@@ -7,7 +7,7 @@ using Application.Interfaces;
 
 namespace Application.UseCases.Events.Querys
 {
-    public class GetAllUsersQuery : IServicesGetAll
+    public class GetAllUsersQuery 
     {
         public object GetAll()
         {
