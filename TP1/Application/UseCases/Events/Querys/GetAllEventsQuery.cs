@@ -7,11 +7,15 @@ using Application.Interfaces;
 
 namespace Application.UseCases.Events.Querys
 {
-    public class GetAllEventsQuery : IServicesGetAll
+    public class GetAllEventsQuery 
     {
-        public object GetAll()
-        {
-            return new { name = "string" };
-        }
+
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public DateTime EventDate { get; set; }
+        public string Venue { get; set; }
+
+
+
     }
 }
