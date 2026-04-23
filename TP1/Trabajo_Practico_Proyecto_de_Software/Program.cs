@@ -13,9 +13,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // TP
-var connectionString = builder.Configuration["connectionString"];
-builder.Services.AddDbContext<AppDbContext>(option => option.UseSqlServer(connectionString));
+//var connectionString = builder.Configuration["connectionString"];
+//builder.Services.AddDbContext<AppDbContext>(option => option.UseSqlServer(connectionString));
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddTransient<IServicesGetAll, GetAllEventsQuery>();
 
