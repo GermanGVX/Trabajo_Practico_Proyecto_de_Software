@@ -11,5 +11,7 @@ namespace Application.Interface
     {
         Task InsertEvent(EVENT Event);
         Task SaveChangesAsync();
+        Task<List<EVENT>> GetListEvents();
+        EVENT GetEvent(int eventId);
     }
 }

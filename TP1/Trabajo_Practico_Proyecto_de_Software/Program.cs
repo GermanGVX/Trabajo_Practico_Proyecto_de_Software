@@ -2,6 +2,8 @@ using Application.Interface;
 using Application.Interfaces;
 using Application.UseCases.Events.Handlers;
 using Application.UseCases.Events.Querys;
+using Application.UseCases.Seats.Handlers;
+using Application.UseCases.Sectors.Handlers;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -16,18 +18,24 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // TP
-//var connectionString = builder.Configuration["connectionString"];
-//builder.Services.AddDbContext<AppDbContext>(option => option.UseSqlServer(connectionString));
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddTransient<IServicesGetAll, GetAllEventsQuery>();
-
+//repositories
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+builder.Services.AddScoped<ISectorRepository, SectorRepository>();
+builder.Services.AddScoped<ISeatRepository, SeatRepository>();
 
+//handlers
 builder.Services.AddScoped<ICreateEventCommandHandler, CreateEventCommandHandler>();
+builder.Services.AddScoped<IGetEventByIdQueryHandler, GetEventByIdQueryHandler>();
+builder.Services.AddScoped<IGetAllEventsQueryHandler, GetAllEventsQueryHandler>();
+builder.Services.AddScoped<IGetSectorsByEventIdQueryHandler, GetSectorsByEventIdQueryHandler>();
+builder.Services.AddScoped<IGetSeatBySectorIdQueryHandler, GetSeatsBySectorIdQueryHandler>();
+
 
 
 var app = builder.Build();
