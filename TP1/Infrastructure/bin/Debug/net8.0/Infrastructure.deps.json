@@ -1040,7 +1040,8 @@
       },
       "Application/1.0.0": {
         "dependencies": {
-          "Domain": "1.0.0"
+          "Domain": "1.0.0",
+          "Microsoft.EntityFrameworkCore": "9.0.15"
         },
         "runtime": {
           "Application.dll": {

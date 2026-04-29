@@ -31,7 +31,8 @@ namespace Infrastructure.Persistence.Repositories
             };
 
             await _context.audit.AddAsync(auditLog);
-            
+            await _context.SaveChangesAsync();
         }
+
     }
 }

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Exceptions
 {
-    internal class DomainException
+    public class ConflictException : Exception
     {
+        
+         public ConflictException(string message) : base(message) { }
+        
     }
 }
