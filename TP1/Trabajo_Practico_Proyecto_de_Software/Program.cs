@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Application.UseCases.Events.Handlers;
 using Application.UseCases.Events.Querys;
 using Application.UseCases.Sectors.Handlers;
+using Application.UseCases.Users.Handlers;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,7 @@ builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 builder.Services.AddScoped<ISectorRepository, SectorRepository>();
 builder.Services.AddScoped<ISeatRepository, SeatRepository>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 
 builder.Services.AddScoped<ICreateEventCommandHandler, CreateEventCommandHandler>();
@@ -35,10 +37,20 @@ builder.Services.AddScoped<IGetEventByIdQueryHandler, GetEventByIdQueryHandler>(
 builder.Services.AddScoped<IGetAllEventsQueryHandler, GetAllEventsQueryHandler>();
 builder.Services.AddScoped<IGetSectorsByEventIdQueryHandler, GetSectorsByEventIdQueryHandler>();
 builder.Services.AddScoped<ICreateReservationCommandHandler, CreateReservationCommandHandler>();
+builder.Services.AddScoped<ICreateUserCommandHandler, CreateUserCommandHandler>();
+builder.Services.AddScoped<IGetUserByIdQueryHandler, GetUserByIdQueryHandler>();
+builder.Services.AddScoped<ILoginUserCommandHandler, LoginUserCommandHandler>();
 
 
 
 var app = builder.Build();
+
+
+//para front
+app.UseStaticFiles();
+
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos - Ticketing</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🎫 Eventos Disponibles</h1>
+            <div class="header-actions">
+                <div class="user-info">
+                    <span id="userName">Usuario</span>
+                    <button onclick="logout()" class="btn btn-logout">Cerrar Sesión</button>
+                </div>
+            </div>
+        </header>
+
+        <div id="eventsContainer" class="events-grid">
+            <!-- Los eventos se cargan dinámicamente -->
+            <div class="loading">Cargando eventos...</div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/events.js"></script>
+</body>
+</html>
