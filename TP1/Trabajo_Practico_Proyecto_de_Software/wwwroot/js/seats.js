@@ -2,70 +2,80 @@
 let currentSectorId = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // Verificar autenticación
     checkAuth();
     updateUserInfo();
 
-    // Obtener parámetros de URL
     const urlParams = new URLSearchParams(window.location.search);
     currentEventId = urlParams.get('event');
+    currentSectorId = urlParams.get('sector');
 
-    if (!currentEventId) {
-        showMessage('No se especificó un evento', 'error');
+    if (!currentEventId || !currentSectorId) {
+        showMessage('Datos incompletos. Redirigiendo...', 'error');
+        setTimeout(() => window.location.href = 'index.html', 1500);
         return;
     }
 
     try {
-        await loadSectors();
-    } catch (error) {
-        showMessage('Error al cargar sectores: ' + error.message, 'error');
-    }
-});
+        // Cargar nombres dinámicamente (corrige el bug de "Concierto de Rock")
+        const events = await apiFetch('/events');
+        const event = events.find(e => e.id == currentEventId);
+        document.getElementById('eventName').textContent = event?.name || 'Evento';
 
-async function loadSectors() {
-    try {
         const sectors = await apiFetch(`/events/${currentEventId}/sectors`);
-
-        if (sectors.length === 0) {
-            showMessage('No hay sectores disponibles', 'error');
-            return;
-        }
-
-        // Usamos el primer sector (para simplificar)
-        currentSectorId = sectors[0].id;
-
-        document.getElementById('sectorName').textContent = sectors[0].name;
-        document.getElementById('sectorPrice').textContent = `Precio: $${sectors[0].price}`;
-        document.getElementById('eventName').textContent = sessionStorage.getItem('currentEventName') || 'Evento';
+        const sector = sectors.find(s => s.id == currentSectorId);
+        document.getElementById('sectorName').textContent = sector?.name || 'Sector';
 
         await loadSeats();
     } catch (error) {
-        showMessage('Error al cargar sectores: ' + error.message, 'error');
+        showMessage('Error: ' + error.message, 'error');
     }
-}
+});
 
 async function loadSeats() {
     const container = document.getElementById('seatsContainer');
 
     try {
-        const seats = await apiFetch(`/sectors/${currentSectorId}/seats`);
+        // ✅ URL corregida para coincidir con tu Controller
+        const seats = await apiFetch(`/Seat/sector/${currentSectorId}`);
 
         if (seats.length === 0) {
-            container.innerHTML = '<p class="loading">No hay asientos disponibles</p>';
+            container.innerHTML = '<p class="loading">No hay asientos en este sector</p>';
             return;
         }
 
-        container.innerHTML = seats.map(seat => `
-            <button 
-                class="seat ${seat.status.toLowerCase()}" 
-                data-seat-id="${seat.id}"
-                data-seat-number="${seat.seatNumber}"
-                onclick="reserveSeat('${seat.id}', ${seat.seatNumber})"
-                ${seat.status !== 'Available' ? 'disabled' : ''}
-            >
-                ${seat.seatNumber}
-            </button>
-        `).join('');
+        // Agrupar por fila (se adapta a cualquier cantidad de asientos)
+        const rows = {};
+        seats.forEach(seat => {
+            const row = seat.rowIdentifier || 'A';
+            if (!rows[row]) rows[row] = [];
+            rows[row].push(seat);
+        });
+
+        // Ordenar filas alfabéticamente (A, B, C...)
+        const sortedRows = Object.keys(rows).sort();
+
+        // Renderizar por filas
+        let html = '';
+        sortedRows.forEach(row => {
+            html += `
+                <div class="seat-row">
+                    <div class="row-label">Fila ${row}</div>
+                    <div class="seats-grid">
+                        ${rows[row].map(seat => `
+                            <button class="seat ${seat.status.toLowerCase()}" 
+                                    data-seat-id="${seat.id}" 
+                                    data-seat-number="${seat.seatNumber}"
+                                    onclick="${seat.status === 'Available' ? `reserveSeat('${seat.id}', ${seat.seatNumber})` : ''}"
+                                    ${seat.status !== 'Available' ? 'disabled' : ''}>
+                                ${seat.seatNumber}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
     } catch (error) {
         container.innerHTML = `<p class="message error">Error: ${error.message}</p>`;
     }
@@ -82,44 +92,20 @@ async function reserveSeat(seatId, seatNumber) {
     try {
         const reservation = await apiFetch('/reservations', {
             method: 'POST',
-            body: JSON.stringify({
-                seatId: seatId,
-                userId: parseInt(userId)
-            })
+            body: JSON.stringify({ seatId, userId: parseInt(userId) })
         });
 
-        // Éxito
-        showMessage(
-            `✅ ¡Reserva exitosa!<br>
-             Asiento ${seatNumber}<br>
-             ⏰ Tienes 5 minutos para completar el pago<br>
-             Expira: ${new Date(reservation.expiresAt).toLocaleTimeString()}`,
-            'success'
-        );
-
-        // Recargar mapa
+        showMessage(`✅ ¡Reserva exitosa!<br>Asiento ${seatNumber}<br> Expira: ${new Date(reservation.expiresAt).toLocaleTimeString()}`, 'success');
         setTimeout(() => loadSeats(), 1000);
-
     } catch (error) {
-        // Error 400 o 409
-        showMessage(
-            `❌ ${error.message}<br>
-             El asiento ${seatNumber} ya no está disponible`,
-            'error'
-        );
-
-        // Recargar mapa
-        setTimeout(() => loadSeats(), 2000);
+        showMessage(`❌ ${error.message}`, 'error');
+        setTimeout(() => loadSeats(), 1500);
     }
 }
 
 function showMessage(text, type) {
     const box = document.getElementById('messageBox');
     box.innerHTML = text;
-    box.className = `message ${type}`;
-
-    // Auto-ocultar después de 5 segundos
-    setTimeout(() => {
-        box.className = 'message';
-    }, 5000);
+    box.className = `message ${type} show`;
+    setTimeout(() => box.classList.remove('show'), 6000);
 }

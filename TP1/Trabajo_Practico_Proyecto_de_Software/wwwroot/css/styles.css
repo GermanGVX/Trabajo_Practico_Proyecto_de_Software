@@ -942,3 +942,143 @@ a {
         box-shadow: none;
     }
 }
+
+/* ============================================
+   NUEVOS ESTILOS: SECTORES & MAPA POR FILAS
+   ============================================ */
+.venue-layout {
+    padding: 2rem;
+    text-align: center;
+}
+
+.stage {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 0 0 60% 60% / 25px;
+    margin: 0 auto 2.5rem;
+    max-width: 450px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+    .stage::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, rgba(255,255,255,0.1), transparent);
+        pointer-events: none;
+    }
+
+.sectors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+.sector-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: 2px solid transparent;
+    text-align: center;
+}
+
+    .sector-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-xl);
+        border-color: var(--primary-light);
+    }
+
+    .sector-card h3 {
+        margin-bottom: 0.5rem;
+        color: var(--gray-800);
+    }
+
+.sector-price {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin: 0.5rem 0;
+}
+
+.sector-capacity {
+    color: var(--gray-500);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+.header-title-group {
+    text-align: center;
+}
+
+.sector-title {
+    color: rgba(255,255,255,0.85);
+    font-size: 1.1rem;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+/* Mapa por filas */
+.seats-layout {
+    padding: 2rem;
+    background: var(--gray-50);
+}
+
+.seat-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    justify-content: center;
+}
+
+.row-label {
+    width: 50px;
+    font-weight: 700;
+    color: var(--gray-600);
+    text-align: right;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+}
+
+.seats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+    gap: 0.6rem;
+    flex: 1;
+    max-width: 900px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sectors-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .seat-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .row-label {
+        width: auto;
+        text-align: center;
+    }
+
+    .stage {
+        max-width: 90%;
+        font-size: 0.9rem;
+        
+    }
+}

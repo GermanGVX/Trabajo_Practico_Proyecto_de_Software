@@ -32,8 +32,6 @@ namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
         }
        
 
-
-
         [HttpPost]
         public async Task<IActionResult> CreateEvent( CreateEventCommand command)
         {
@@ -67,14 +65,5 @@ namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
 
             return Ok(result);
         }
-
-        [HttpGet("{sectorId}/seats")]
-
-            public async Task<IActionResult> GetSeatsBySectorId(int sectorId)
-            {
-                var result = await _GetSeatsBySectorId.GetSeatBySectorId(sectorId);
-            return Ok(result);
-        }
-
     }
 }
