@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.UseCases.Events.Commands
+namespace Application.UseCases.Users.Commands
 {
-    public class CreateUserCommand
+    public class LoginUserCommand
     {
-        public string Name { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
     }

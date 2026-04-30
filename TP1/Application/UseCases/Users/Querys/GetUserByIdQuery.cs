@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.UseCases.Events.Commands
+namespace Application.UseCases.Events.Querys
 {
-    public class CreateUserCommand
+    public class GetUserByIdQuery
     {
         public string Name { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
     }
 }

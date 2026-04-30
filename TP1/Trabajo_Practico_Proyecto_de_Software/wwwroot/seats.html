@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de Asientos - Ticketing</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <button onclick="window.location.href='index.html'" class="btn-back">
+                ← Volver
+            </button>
+            <h1 id="eventName">Concierto de Rock</h1>
+            <div class="header-actions">
+                <div class="user-info">
+                    <span id="userName">Usuario</span>
+                    <button onclick="logout()" class="btn btn-logout">Cerrar Sesión</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="sector-info">
+            <h2 id="sectorName">Campo</h2>
+            <div class="price" id="sectorPrice">$5000</div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-seat available">✓</div>
+                <span>Disponible</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-seat reserved">⏳</div>
+                <span>Reservado</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-seat sold">✗</div>
+                <span>Vendido</span>
+            </div>
+        </div>
+
+        <div class="seats-container">
+            <div id="seatsContainer" class="seats-grid">
+                <div class="loading">Cargando asientos...</div>
+            </div>
+        </div>
+
+        <div id="messageBox" class="message"></div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/seats.js"></script>
+</body>
+</html>
