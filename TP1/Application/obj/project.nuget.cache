@@ -1,21 +1,31 @@
 {
   "version": 2,
-  "dgSpecHash": "AYNfW4G724w=",
+  "dgSpecHash": "o2sPFoOWBqY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\gerva\\source\\repos\\Proyecto_de_Software\\TP1\\Application\\Application.csproj",
+  "projectFilePath": "C:\\Users\\tobim\\Trabajo_Practico_Proyecto_de_Software\\TP1\\Application\\Application.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\gerva\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.15\\microsoft.entityframeworkcore.9.0.15.nupkg.sha512",
-    "C:\\Users\\gerva\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\9.0.15\\microsoft.entityframeworkcore.abstractions.9.0.15.nupkg.sha512",
-    "C:\\Users\\gerva\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\9.0.15\\microsoft.entityframeworkcore.analyzers.9.0.15.nupkg.sha512",
-    "C:\\Users\\gerva\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\9.0.15\\microsoft.extensions.caching.abstractions.9.0.15.nupkg.sha512",
-    "C:\\Users\\gerva\\.nuget\\packages\\microsoft.extensions.caching.memory\\9.0.15\\microsoft.extensions.caching.memory.9.0.15.nupkg.sha512",
-    "C:\\Users\\gerva\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\9.0.15\\microsoft.extensions.dependencyinjection.9.0.15.nupkg.sha512",
-    "C:\\Users\\gerva\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\9.0.15\\microsoft.extensions.dependencyinjection.abstractions.9.0.15.nupkg.sha512",
-    "C:\\Users\\gerva\\.nuget\\packages\\microsoft.extensions.logging\\9.0.15\\microsoft.extensions.logging.9.0.15.nupkg.sha512",
-    "C:\\Users\\gerva\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\9.0.15\\microsoft.extensions.logging.abstractions.9.0.15.nupkg.sha512",
-    "C:\\Users\\gerva\\.nuget\\packages\\microsoft.extensions.options\\9.0.15\\microsoft.extensions.options.9.0.15.nupkg.sha512",
-    "C:\\Users\\gerva\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.15\\microsoft.extensions.primitives.9.0.15.nupkg.sha512",
-    "C:\\Users\\gerva\\.nuget\\packages\\system.diagnostics.diagnosticsource\\9.0.15\\system.diagnostics.diagnosticsource.9.0.15.nupkg.sha512"
+    "C:\\Users\\tobim\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.15\\microsoft.entityframeworkcore.9.0.15.nupkg.sha512",
+    "C:\\Users\\tobim\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\9.0.15\\microsoft.entityframeworkcore.abstractions.9.0.15.nupkg.sha512",
+    "C:\\Users\\tobim\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\9.0.15\\microsoft.entityframeworkcore.analyzers.9.0.15.nupkg.sha512",
+    "C:\\Users\\tobim\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\9.0.15\\microsoft.extensions.caching.abstractions.9.0.15.nupkg.sha512",
+    "C:\\Users\\tobim\\.nuget\\packages\\microsoft.extensions.caching.memory\\9.0.15\\microsoft.extensions.caching.memory.9.0.15.nupkg.sha512",
+    "C:\\Users\\tobim\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\9.0.15\\microsoft.extensions.dependencyinjection.9.0.15.nupkg.sha512",
+    "C:\\Users\\tobim\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\9.0.15\\microsoft.extensions.dependencyinjection.abstractions.9.0.15.nupkg.sha512",
+    "C:\\Users\\tobim\\.nuget\\packages\\microsoft.extensions.logging\\9.0.15\\microsoft.extensions.logging.9.0.15.nupkg.sha512",
+    "C:\\Users\\tobim\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\9.0.15\\microsoft.extensions.logging.abstractions.9.0.15.nupkg.sha512",
+    "C:\\Users\\tobim\\.nuget\\packages\\microsoft.extensions.options\\9.0.15\\microsoft.extensions.options.9.0.15.nupkg.sha512",
+    "C:\\Users\\tobim\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.15\\microsoft.extensions.primitives.9.0.15.nupkg.sha512",
+    "C:\\Users\\tobim\\.nuget\\packages\\system.diagnostics.diagnosticsource\\9.0.15\\system.diagnostics.diagnosticsource.9.0.15.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "message": "Problema al leer el archivo de caché C:\\Users\\tobim\\Trabajo_Practico_Proyecto_de_Software\\TP1\\Application\\obj\\project.nuget.cache : '<' is an invalid start of a property name. Expected a '\"'. Path: $ | LineNumber: 2 | BytePositionInLine: 0.",
+      "projectPath": "C:\\Users\\tobim\\Trabajo_Practico_Proyecto_de_Software\\TP1\\Application\\Application.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\tobim\\Trabajo_Practico_Proyecto_de_Software\\TP1\\Application\\Application.csproj",
+      "targetGraphs": []
+    }
+  ]
 }

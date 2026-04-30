@@ -2,6 +2,10 @@ using Application.Interface;
 using Application.Interfaces;
 using Application.UseCases.Events.Handlers;
 using Application.UseCases.Events.Querys;
+<<<<<<< HEAD
+using Application.UseCases.Seats.Handlers;
+=======
+>>>>>>> f326cc82e92634ce93fd468514a8591c3af94a97
 using Application.UseCases.Sectors.Handlers;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
@@ -22,19 +26,31 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+<<<<<<< HEAD
+//repositories
+=======
 
+>>>>>>> f326cc82e92634ce93fd468514a8591c3af94a97
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IAuditLogRepository, AuditLogRepository>();
 builder.Services.AddScoped<ISectorRepository, SectorRepository>();
 builder.Services.AddScoped<ISeatRepository, SeatRepository>();
+<<<<<<< HEAD
+=======
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 
+>>>>>>> f326cc82e92634ce93fd468514a8591c3af94a97
 
+//handlers
 builder.Services.AddScoped<ICreateEventCommandHandler, CreateEventCommandHandler>();
 builder.Services.AddScoped<IGetEventByIdQueryHandler, GetEventByIdQueryHandler>();
 builder.Services.AddScoped<IGetAllEventsQueryHandler, GetAllEventsQueryHandler>();
 builder.Services.AddScoped<IGetSectorsByEventIdQueryHandler, GetSectorsByEventIdQueryHandler>();
+<<<<<<< HEAD
+builder.Services.AddScoped<IGetSeatBySectorIdQueryHandler, GetSeatsBySectorIdQueryHandler>();
+=======
 builder.Services.AddScoped<ICreateReservationCommandHandler, CreateReservationCommandHandler>();
+>>>>>>> f326cc82e92634ce93fd468514a8591c3af94a97
 
 
 

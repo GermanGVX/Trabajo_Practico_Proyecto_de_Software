@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace Application.UseCases.Events.Handlers
 {
-    internal class CreateSeatCommandHandler
+    public class CreateSeatCommandHandler
     {
+
+
     }
 }
