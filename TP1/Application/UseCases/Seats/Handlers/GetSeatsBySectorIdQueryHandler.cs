@@ -26,8 +26,7 @@ namespace Application.UseCases.Seats.Handlers
                 SectorId = s.SectorId,
                 RowIdentifier = s.RowIdentifier,
                 SeatNumber = s.SeatNumber,
-                Status = s.Status,
-                Version = s.Version
+                Status = s.Status
             }).ToList();
 
         }

@@ -37,7 +37,7 @@ function goToSeats(eventId, eventName) {
     // Guardar info del evento en sessionStorage
     sessionStorage.setItem('currentEventId', eventId);
     sessionStorage.setItem('currentEventName', eventName);
-    window.location.href = `seats.html?event=${eventId}`;
+    window.location.href = `sectors.html?event=${eventId}`;
 }
 
 function showError(message) {
