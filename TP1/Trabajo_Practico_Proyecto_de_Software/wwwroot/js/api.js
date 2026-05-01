@@ -32,31 +32,22 @@ function updateUserInfo() {
 
 // Fetch con manejo de errores
 async function apiFetch(endpoint, options = {}) {
-    const defaultOptions = {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    };
+    const url = `${API_BASE}${endpoint}`;
+    const response = await fetch(url, {
+        headers: { 'Content-Type': 'application/json', ...options.headers },
+        ...options
+    });
 
-    try {
-        const response = await fetch(`${API_BASE}${endpoint}`, {
-            ...defaultOptions,
-            ...options,
-            headers: {
-                ...defaultOptions.headers,
-                ...options.headers,
-            },
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.error || `Error ${response.status}`);
-        }
-
-        return data;
-    } catch (error) {
-        console.error('API Error:', error);
-        throw error;
+    // Si el backend devuelve HTML (error 500/404), lanzamos error claro
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('text/html')) {
+        const html = await response.text();
+        throw new Error(`El servidor devolvió HTML en lugar de JSON. Revisa la ruta: ${endpoint}`);
     }
+
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error || `Error ${response.status}`);
+    }
+    return data;
 }

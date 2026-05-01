@@ -18,7 +18,7 @@ namespace Domain.Entities
         public int Version { get; set; }
 
         public SECTOR    sector { get; set; } = null!;
-        public RESERVATION? Activereservation { get; set; }
+        
 
     }
 }

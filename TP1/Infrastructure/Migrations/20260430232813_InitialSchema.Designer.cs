@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260424032726_FixReservationSeatFk")]
-    partial class FixReservationSeatFk
+    [Migration("20260430232813_InitialSchema")]
+    partial class InitialSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -122,8 +122,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SeatId")
-                        .IsUnique();
+                    b.HasIndex("SeatId");
 
                     b.HasIndex("UserId");
 
@@ -1145,8 +1144,8 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.RESERVATION", b =>
                 {
                     b.HasOne("Domain.Entities.SEAT", "seat")
-                        .WithOne("Activereservation")
-                        .HasForeignKey("Domain.Entities.RESERVATION", "SeatId")
+                        .WithMany()
+                        .HasForeignKey("SeatId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1185,11 +1184,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.EVENT", b =>
                 {
                     b.Navigation("sectors");
-                });
-
-            modelBuilder.Entity("Domain.Entities.SEAT", b =>
-                {
-                    b.Navigation("Activereservation");
                 });
 
             modelBuilder.Entity("Domain.Entities.SECTOR", b =>

@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Security.Cryptography;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Application.Interfaces;
 using Application.UseCases.Events.Commands;
@@ -39,11 +40,17 @@ namespace Application.UseCases.Events.Handlers
             await _userRepository.SaveChangesAsync();
 
             await _auditLogRepository.LogAsync(
-                action: "Create_User",
+                action: "CREATE_USER",
                 entityType: "USER",
                 entityId: user.Id.ToString(),
                 userId: null,
-                details: $"Usuario Creado: {user.Name} | Email: {user.Email}"
+                details: JsonSerializer.Serialize(new
+                {
+                    UserId = user.Id,
+                    Username = user.Name,
+                    Email = user.Email,
+                    CreatedAt = DateTime.UtcNow
+                })
                 );
 
             return user.Id;
