@@ -68,7 +68,7 @@ namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
                 });
             }
         }
-        // POST /api/reservations/{id}/confirm
+        
         [HttpPost("{id}/confirm")]
         public async Task<IActionResult> ConfirmPayment(Guid id)
         {

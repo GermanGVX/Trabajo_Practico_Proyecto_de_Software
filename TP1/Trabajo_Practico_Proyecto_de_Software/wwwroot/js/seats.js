@@ -36,13 +36,13 @@ async function loadSeats() {
     container.innerHTML = '<p class="loading">Cargando asientos...</p>';
 
     try {
-        console.log('🔍 Intentando cargar sector:', currentSectorId);
+        console.log(' Intentando cargar sector:', currentSectorId);
 
         
         const response = await fetch(`${API_BASE}/Seat/sector/${currentSectorId}`);
 
-        console.log('📡 Status:', response.status);
-        console.log('📡 Content-Type:', response.headers.get('content-type'));
+        console.log(' Status:', response.status);
+        console.log(' Content-Type:', response.headers.get('content-type'));
 
         if (!response.ok) {
             const errorText = await response.text();
@@ -116,52 +116,6 @@ async function loadSeats() {
 }
 
 
-
-
-//async function reserveSeat(seatId, seatNumber, row) {
-//    const userId = checkAuth();
-//    if (!userId) return;
-
-//    const button = document.querySelector(`[data-seat-id="${seatId}"]`);
-//    const originalText = button.textContent;
-//    button.disabled = true;
-//    button.textContent = '...';
-
-//    try {
-
-//        const reservation = await apiFetch('/reservations', {
-//            method: 'POST',
-//            body: JSON.stringify({ seatId: seatId, userId: parseInt(userId) })
-//        });
-
-//        sessionStorage.setItem('currentReservationId', reservation.id);
-//        sessionStorage.setItem('reservationExpiresAt', reservation.expiresAt);
-//        sessionStorage.setItem('reservationSeatNumber', seatNumber);
-//        sessionStorage.setItem('reservationRow', row);
-//        sessionStorage.setItem('reservationSectorName', document.getElementById('sectorName').textContent);
-//        sessionStorage.setItem('reservationEventName', document.getElementById('eventName').textContent);
-
-
-//        window.location.href = `checkout.html?reservation=${reservation.id}`;
-
-//    } catch (error) {
-
-//        console.error("Reserva fallida:", error);
-//        const errorMsg = error.message.includes("JSON")
-//            ? "Error de conexión con el servidor. Intenta nuevamente."
-//            : error.message;
-
-//        showMessage(`❌ ${errorMsg}`, 'error');
-
-
-
-//        setTimeout(() => {
-//            button.disabled = false;
-//            button.textContent = originalText;
-//            loadSeats();
-//        }, 1500);
-//    }
-//}
 
 async function reserveSeat(seatId, seatNumber, row) {
     const userId = checkAuth();

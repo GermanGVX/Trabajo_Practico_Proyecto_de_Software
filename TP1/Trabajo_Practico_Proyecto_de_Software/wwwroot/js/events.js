@@ -24,8 +24,8 @@ async function loadEvents() {
         container.innerHTML = events.map(event => `
             <div class="event-card" onclick="goToSeats(${event.id}, '${event.name}')">
                 <h3>${event.name}</h3>
-                <p>📅 ${new Date(event.eventDate).toLocaleDateString()}</p>
-                <p>📍 ${event.venue}</p>
+                <p> ${new Date(event.eventDate).toLocaleDateString()}</p>
+                <p> ${event.venue}</p>
             </div>
         `).join('');
     } catch (error) {
@@ -34,7 +34,7 @@ async function loadEvents() {
 }
 
 function goToSeats(eventId, eventName) {
-    // Guardar info del evento en sessionStorage
+    // Guardar info del evento 
     sessionStorage.setItem('currentEventId', eventId);
     sessionStorage.setItem('currentEventName', eventName);
     window.location.href = `sectors.html?event=${eventId}`;
