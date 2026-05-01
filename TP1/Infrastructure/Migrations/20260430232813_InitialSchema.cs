@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class FixReservationSeatFk : Migration
+    public partial class InitialSchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -268,8 +268,7 @@ namespace Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_RESERVATION_SeatId",
                 table: "RESERVATION",
-                column: "SeatId",
-                unique: true);
+                column: "SeatId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RESERVATION_UserId",

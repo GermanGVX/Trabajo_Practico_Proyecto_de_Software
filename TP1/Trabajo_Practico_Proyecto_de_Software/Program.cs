@@ -2,6 +2,7 @@ using Application.Interface;
 using Application.Interfaces;
 using Application.UseCases.Events.Handlers;
 using Application.UseCases.Events.Querys;
+using Application.UseCases.Reservation.Handlers;
 using Application.UseCases.Seats.Handlers;
 using Application.UseCases.Sectors.Handlers;
 using Application.UseCases.Users.Handlers;
@@ -47,9 +48,10 @@ builder.Services.AddScoped<ICreateReservationCommandHandler, CreateReservationCo
 builder.Services.AddScoped<ICreateUserCommandHandler, CreateUserCommandHandler>();
 builder.Services.AddScoped<IGetUserByIdQueryHandler, GetUserByIdQueryHandler>();
 builder.Services.AddScoped<ILoginUserCommandHandler, LoginUserCommandHandler>();
+builder.Services.AddScoped<IConfirmPaymentCommandHandler, ConfirmPaymentCommandHandler>();
+builder.Services.AddScoped<ICancelReservationCommandHandler, CancelReservationCommandHandler>();
 
-
-
+builder.Services.AddHostedService<Infrastructure.Jobs.ReleaseExpiredReservationsJob>();
 
 var app = builder.Build();
 

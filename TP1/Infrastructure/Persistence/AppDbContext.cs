@@ -58,10 +58,7 @@ namespace Infrastructure.Persistence
                 .HasForeignKey(e => e.SectorId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-                entity.HasOne<RESERVATION>(e => e.Activereservation)
-                .WithOne(e => e.seat)
-                .HasForeignKey<RESERVATION>(e=> e.SeatId)
-                .OnDelete(DeleteBehavior.SetNull);
+                
 
                 entity.Property(s => s.Version).IsConcurrencyToken();
             });
@@ -71,14 +68,15 @@ namespace Infrastructure.Persistence
                 entity.ToTable("RESERVATION");
 
                 entity.HasKey(e => e.Id);
+
                 entity.HasOne(r => r.user)
                     .WithMany(u => u.reserva)
                     .HasForeignKey(r => r.UserId)
                     .OnDelete(DeleteBehavior.SetNull);
 
                 entity.HasOne(r => r.seat)
-                    .WithOne(s => s.Activereservation)
-                    .HasForeignKey<RESERVATION>(r => r.SeatId)
+                    .WithMany()
+                    .HasForeignKey(r => r.SeatId)
                     .OnDelete(DeleteBehavior.Restrict);
             });
 

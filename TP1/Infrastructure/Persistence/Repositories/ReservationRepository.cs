@@ -45,6 +45,11 @@ namespace Infrastructure.Persistence.Repositories
             await _context.SaveChangesAsync();
         }
 
-        
+        public async Task<RESERVATION?> GetByIdAsync(Guid id)
+        {
+            return await _context.reservation.FindAsync(id); // FindAsync es más eficiente para PK
+        }
+
+
     }
 }

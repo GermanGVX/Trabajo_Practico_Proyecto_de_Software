@@ -1082,3 +1082,56 @@ a {
         
     }
 }
+
+
+.checkout-container {
+    max-width: 600px;
+    margin: 3rem auto;
+}
+
+.timer-box {
+    background: var(--gray-100);
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 2rem;
+    border: 2px solid var(--gray-200);
+}
+
+.timer-value {
+    font-size: 3rem;
+    font-weight: 800;
+    font-family: monospace;
+    color: var(--primary);
+}
+
+.timer-box.warning .timer-value {
+    color: var(--warning);
+    animation: pulse 1s infinite;
+}
+
+.timer-box.expired .timer-value {
+    color: var(--danger);
+}
+
+.reservation-details {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.price-highlight {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--success);
+}
+
+.checkout-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+    .checkout-actions .btn {
+        flex: 1;
+    }

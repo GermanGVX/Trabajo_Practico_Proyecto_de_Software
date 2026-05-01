@@ -14,6 +14,8 @@ namespace Application.Interfaces
         Task<List<RESERVATION>> GetExpiredReservationsAsync(DateTime threshold);
         Task UpdateAsync(RESERVATION reservation);
         Task SaveChangesAsync();
-        
+        Task<RESERVATION?> GetByIdAsync(Guid id);
+
+
     }
 }

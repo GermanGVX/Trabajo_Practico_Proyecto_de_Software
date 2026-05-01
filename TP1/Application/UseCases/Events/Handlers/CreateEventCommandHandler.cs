@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Application.Interface;
 using Application.Interfaces;
 using Application.UseCases.Events.Commands;
 using Domain.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Events.Handlers
 {
@@ -33,11 +35,21 @@ namespace Application.UseCases.Events.Handlers
             await _eventRepository.InsertEvent(newEvent);
 
             await _auditLogRepository.LogAsync(
-                action: "Create_Event",
+                action: "CREATE_EVENT",
                 entityType: "Event",
                 entityId: newEvent.Id.ToString(),
                 userId : null,
-                details : $"Evento Creado: {newEvent.Name} | Recinto: {newEvent.Venue}"
+                details : JsonSerializer.Serialize(new
+                {
+                    EventId = newEvent.Id,
+                    EventName = newEvent.Name,
+                    Venue = newEvent.Venue,
+                    EventDate = newEvent.EventDate,
+                    TotalSectors = newEvent.sectors.Count,
+                    TotalSeats = newEvent.sectors.Sum(s => s.Capacity),
+                    CreatedAt = DateTime.UtcNow,
+                    
+                })
                 );
 
             await _eventRepository.SaveChangesAsync();

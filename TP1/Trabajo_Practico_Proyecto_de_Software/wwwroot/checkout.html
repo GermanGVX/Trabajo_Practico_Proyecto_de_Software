@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Compra - Ticketing</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container checkout-container">
+        <header class="header">
+            <button onclick="window.history.back()" class="btn-back">← Volver</button>
+            <h1>Confirmar Compra</h1>
+            <div class="header-actions">
+                <div class="user-info">
+                    <span id="userName">Usuario</span>
+                    <button onclick="logout()" class="btn btn-logout">Cerrar Sesión</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="checkout-body">
+            <div class="timer-box" id="timerBox">
+                <div class="timer-icon">⏱️</div>
+                <div class="timer-text">Tiempo restante</div>
+                <div class="timer-value" id="timerValue">05:00</div>
+            </div>
+
+            <div class="reservation-details">
+                <h2 id="eventTitle">Cargando...</h2>
+                <p> Butaca: <span id="seatInfo">-</span></p>
+                <p> Sector: <span id="sectorInfo">-</span></p>
+                <p>💰 Precio: <span id="priceInfo" class="price-highlight">-</span></p>
+                <p class="info-text">Al confirmar, se simulará el pago y la butaca pasará a estado <strong>Vendida</strong>.</p>
+            </div>
+
+            <div class="checkout-actions">
+                <button id="btnConfirm" class="btn btn-primary" onclick="confirmPayment()">✅ Confirmar Pago</button>
+                <button id="btnCancel" class="btn btn-secondary" onclick="cancelReservation()">❌ Cancelar Reserva</button>
+            </div>
+
+            <div id="messageBox" class="message"></div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/checkout.js"></script>
+</body>
+</html>
