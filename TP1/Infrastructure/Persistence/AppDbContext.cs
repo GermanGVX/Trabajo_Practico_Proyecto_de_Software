@@ -106,7 +106,7 @@ namespace Infrastructure.Persistence
         }
         private void SeedData(ModelBuilder modelBuilder)
         {
-            // EVENTO - Fecha fija, NO DateTime.UtcNow
+            
             modelBuilder.Entity<EVENT>().HasData(
                 new EVENT
                 {
@@ -130,7 +130,7 @@ namespace Infrastructure.Persistence
             // Campo: GUIDs base "10000000-0000-0000-0000-000000000XXX"
             for (int i = 1; i <= 50; i++)
             {
-                string guidHex = i.ToString("X3").PadLeft(3, '0'); // 001, 002, ..., 032, ..., 050
+                string guidHex = i.ToString("X3").PadLeft(3, '0'); 
                 string guidStr = $"10000000-0000-0000-0000-000000000{guidHex}";
 
                 seats.Add(new SEAT

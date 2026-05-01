@@ -53,6 +53,8 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     }
 });
 
+
+
 // --- REGISTRO ---
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -85,3 +87,4 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         btn.textContent = 'Crear cuenta';
     }
 });
+

@@ -17,54 +17,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadReservationDetails();
 });
 
-//async function loadReservationDetails() {
-//    try {
-
-//        const data = JSON.parse(sessionStorage.getItem(`reservation_${reservationId}`));
-//        if (!data) throw new Error('Datos de reserva no encontrados. Inicia el proceso desde el mapa.');
-
-//        document.getElementById('eventTitle').textContent = data.eventName || 'Evento';
-//        document.getElementById('seatInfo').textContent = `N° ${data.seatNumber} (Fila ${data.row})`;
-//        document.getElementById('sectorInfo').textContent = data.sectorName;
-//        document.getElementById('priceInfo').textContent = `$${data.price}`;
-
-
-//        let dateStr = data.expiresAt;
-//        if (!dateStr.endsWith('Z') && !dateStr.includes('+') && !dateStr.endsWith('00:00')) {
-//            dateStr = dateStr + 'Z';
-//        }
-//        expiresAt = new Date(dateStr);
-
-
-//        if (isNaN(expiresAt.getTime()) || (expiresAt - Date.now()) < 0) {
-//            console.warn(' Fecha inválida o ya expirada, recalculando desde ahora');
-//            expiresAt = new Date(Date.now() + 5 * 60 * 1000);
-//        }
-
-//        console.log(' Timer iniciado:', expiresAt.toLocaleTimeString(), '- Diferencia:', Math.round((expiresAt - Date.now()) / 1000), 'segundos');
-//        startTimer();
-//    } catch (error) {
-//        showMessage(error.message, 'error');
-//        setTimeout(() => window.location.href = 'seats.html', 3000);
-//    }
-//}
 
 async function loadReservationDetails() {
     try {
-        console.log('🔍 Buscando datos de reserva...');
-        console.log('🔑 reservationId:', reservationId);
+        console.log(' Buscando datos de reserva...');
+        console.log(' reservationId:', reservationId);
 
         // Listar todas las claves en sessionStorage (DEBUG)
         for (let i = 0; i < sessionStorage.length; i++) {
             const key = sessionStorage.key(i);
-            console.log(`📦 SessionStorage key ${i}: ${key}`);
+            console.log(` SessionStorage key ${i}: ${key}`);
         }
 
         // Intentar obtener datos con la clave exacta
         const storageKey = `reservation_${reservationId}`;
         const storedData = sessionStorage.getItem(storageKey);
 
-        console.log('📥 Datos brutos de sessionStorage:', storedData);
+        console.log(' Datos brutos de sessionStorage:', storedData);
 
         if (!storedData) {
             console.error('❌ No se encontraron datos con la clave:', storageKey);
@@ -72,11 +41,11 @@ async function loadReservationDetails() {
         }
 
         const data = JSON.parse(storedData);
-        console.log('✅ Datos parseados:', data);
+        console.log(' Datos parseados:', data);
 
         // Verificar que existan todos los campos
         if (!data.eventName || !data.seatNumber || !data.sectorName) {
-            console.warn('⚠️ Datos incompletos en sessionStorage');
+            console.warn(' Datos incompletos en sessionStorage');
         }
 
         document.getElementById('eventTitle').textContent = data.eventName || 'Evento';
@@ -87,16 +56,16 @@ async function loadReservationDetails() {
         // Calcular expiración
         if (data.expiresAt) {
             expiresAt = new Date(data.expiresAt);
-            console.log('🕐 Expira:', expiresAt);
+            console.log(' Expira:', expiresAt);
         } else {
             // Fallback: 5 minutos desde ahora
             expiresAt = new Date(Date.now() + 5 * 60 * 1000);
-            console.warn('⚠️ No hay expiresAt, usando +5min desde ahora');
+            console.warn(' No hay expiresAt, usando +5min desde ahora');
         }
 
         startTimer();
     } catch (error) {
-        console.error('❌ Error en loadReservationDetails:', error);
+        console.error(' Error en loadReservationDetails:', error);
         showMessage(error.message, 'error');
         setTimeout(() => window.location.href = 'seats.html', 3000);
     }
@@ -114,7 +83,7 @@ function startTimer() {
             clearInterval(timerInterval);
             timerEl.textContent = "00:00";
             timerBox.classList.add('expired');
-            showMessage('⏰ El tiempo de reserva ha expirado. Redirigiendo...', 'error');
+            showMessage(' El tiempo de reserva ha expirado. Redirigiendo...', 'error');
             setTimeout(() => window.location.href = 'seats.html', 2000);
             return;
         }

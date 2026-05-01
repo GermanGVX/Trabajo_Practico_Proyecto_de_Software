@@ -11,7 +11,7 @@
     }
 
     try {
-        // 1. Obtener nombre del evento dinámicamente
+        // 1. Obtener nombre del evento
         const events = await apiFetch('/events');
         const event = events.find(e => e.id == eventId);
         document.getElementById('eventName').textContent = event?.name || 'Evento';
@@ -25,7 +25,7 @@
             return;
         }
 
-        // 3. Renderizar tarjetas de sectores (adaptable a 1, 2, 10 o N sectores)
+        // 3. Renderizar tarjetas de sectores
         container.innerHTML = sectors.map(sector => `
             <div class="sector-card" onclick="window.location.href='seats.html?event=${eventId}&sector=${sector.id}'">
                 <h3>${sector.name}</h3>

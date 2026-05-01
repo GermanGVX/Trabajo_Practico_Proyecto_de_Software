@@ -28,7 +28,7 @@ namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
             var userId = await _CreateUser.CreateUser(command);
             return CreatedAtAction(nameof(GetUserById), new { id = userId }, new { Id = userId });
         }
-        [HttpPost("login")] // Login
+        [HttpPost("login")] 
         public async Task<IActionResult> Login([FromBody] LoginUserCommand command)
         {
             var userId = await _Login.LoginUser(command);

@@ -38,7 +38,7 @@ async function apiFetch(endpoint, options = {}) {
         ...options
     });
 
-    // Si el backend devuelve HTML (error 500/404), lanzamos error claro
+   
     const contentType = response.headers.get('content-type');
     if (contentType && contentType.includes('text/html')) {
         const html = await response.text();
