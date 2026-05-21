@@ -9,6 +9,7 @@ using Application.UseCases.Users.Handlers;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Trabajo_Practoco_Proyecto_de_Software.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,6 +71,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseAuthorization();
 
