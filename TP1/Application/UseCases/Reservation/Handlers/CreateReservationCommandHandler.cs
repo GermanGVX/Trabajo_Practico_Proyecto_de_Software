@@ -9,7 +9,7 @@ using Application.Interfaces;
 using Application.UseCases.Events.Commands;
 using Domain.Entities;
 using Domain.Exceptions;
-using Microsoft.EntityFrameworkCore;
+//using Microsoft.EntityFrameworkCore;
 
 namespace Application.UseCases.Events.Handlers
 {
@@ -137,7 +137,7 @@ namespace Application.UseCases.Events.Handlers
                     Message = "Butaca reservada exitosamente. Tienes 5 minutos para completar el pago."
                 };
             }
-            catch (DbUpdateConcurrencyException)
+            catch (ConcurrencyException)
             {
                 await _auditLogRepository.LogAsync(
                     action: "RESERVATION_CONFLICT",
