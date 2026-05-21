@@ -8,7 +8,7 @@ using Application.Interface;
 using Application.Interfaces;
 using Application.UseCases.Events.Commands;
 using Domain.Entities;
-using Microsoft.Extensions.Logging;
+//using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Events.Handlers
 {

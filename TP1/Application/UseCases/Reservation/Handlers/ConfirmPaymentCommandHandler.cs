@@ -8,7 +8,7 @@ using Application.Interfaces;
 using Application.UseCases.Reservation.Commands;
 using Domain.Entities;
 using Domain.Exceptions;
-using Microsoft.EntityFrameworkCore;
+//using Microsoft.EntityFrameworkCore;
 
 namespace Application.UseCases.Reservation.Handlers
 {
@@ -67,7 +67,7 @@ namespace Application.UseCases.Reservation.Handlers
                     })
                 );
             }
-            catch (DbUpdateConcurrencyException)
+            catch (ConcurrencyException)
             {
                 await _auditRepo.LogAsync(
                     action: "PAYMENT_CONFLICT",

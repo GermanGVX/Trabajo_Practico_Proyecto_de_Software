@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Application.Interface;
 using Domain.Entities;
+using Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -27,7 +28,17 @@ namespace Infrastructure.Persistence.Repositories
 
         public async Task SaveChangesAsync()
         {
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                
+                throw new ConcurrencyException(
+                    "Conflicto de concurrencia: el recurso fue modificado por otro usuario."
+                );
+            }
         }
 
         public async Task<List<EVENT>> GetListEvents()
