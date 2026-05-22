@@ -13,6 +13,21 @@ using Trabajo_Practoco_Proyecto_de_Software.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(
+                "http://localhost:5500",
+                "http://127.0.0.1:5500",  
+                "https://localhost:7129"  
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();  
+    });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -57,11 +72,7 @@ builder.Services.AddHostedService<Infrastructure.Jobs.ReleaseExpiredReservations
 var app = builder.Build();
 
 
-app.UseCors(policy => policy
-    .WithOrigins("https://localhost:7129", "null")
-    .AllowAnyHeader()
-    .AllowAnyMethod()
-);
+app.UseCors("AllowFrontend");
 
 
 //para front
