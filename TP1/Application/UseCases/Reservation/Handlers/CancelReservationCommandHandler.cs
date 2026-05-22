@@ -39,13 +39,11 @@ namespace Application.UseCases.Reservation.Handlers
             }
 
             // 3. Marcar reserva como cancelada
-            reservation.Status = "Expired";
+            reservation.Status = "Cancelled";
             await _reservationRepo.UpdateAsync(reservation);
+            
 
-            // 4. Commit
-            await _reservationRepo.SaveChangesAsync();
-
-            // 5. Auditoría 
+            // 4. Auditoría 
             await _auditRepo.LogAsync(
                 action: "RESERVATION_CANCELLED",
                 entityType: "RESERVATION",
@@ -60,6 +58,9 @@ namespace Application.UseCases.Reservation.Handlers
                     Reason = "Cancelación manual del usuario"
                 })
             );
+
+            // 5. Commit
+            await _reservationRepo.SaveChangesAsync();
         }
     }
 }

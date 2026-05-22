@@ -1,4 +1,4 @@
-﻿namespace Application.UseCases.Events.Handlers
+﻿namespace Application.UseCases.Seats.Handlers
 {
     public class CreateSeatCommandHandler
     {
