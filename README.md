@@ -53,7 +53,7 @@ window.API_BASE_URL = "https://localhost:7129/api";
 *Abre tu terminal (consola de administrador de paquetes) y ejecuta los siguientes comandos para conectar a la base de datos:
 Update-Database
 
-```markdown
+
 ##  Ejecución
 
 ### Backend (API)
@@ -63,13 +63,20 @@ dotnet run
 ```
 ### Frontend (Client)
 
+OPCIÓN A:
 - Ejecutá el backend y navegá a `https://localhost:7129/auth.html`
 - El backend sirve los archivos estáticos desde la carpeta `Client/`
 
+OPCIÓN B:
+- Ejecutá el backend
+- En Visual Studio Code en la carpeta de Client dale click derecho a auth.html y Open With Live Server
+
 ### CORS
 El backend está configurado para aceptar peticiones desde:
-- `https://localhost:7129` (mismo origen)
-- `null` (archivo local)
+-`https://localhost:7129` (mismo origen)
+-`http://localhost:5500` (Live Server)
+-`http://127.0.0.1:5500` (Live Server - IP directa)
+-`null` (archivo local)
 
 ## SEED
 El sistema incluye seed de datos iniciales:
