@@ -1,5 +1,5 @@
 ﻿using Application.DTOs;
-using Application.UseCases.Events.Commands;
+using Application.UseCases.Reservation.Commands;
 
 
 namespace Application.Interfaces

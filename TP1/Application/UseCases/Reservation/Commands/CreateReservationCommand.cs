@@ -1,4 +1,4 @@
-﻿namespace Application.UseCases.Events.Commands
+﻿namespace Application.UseCases.Reservation.Commands
 {
     public class CreateReservationCommand
     {
