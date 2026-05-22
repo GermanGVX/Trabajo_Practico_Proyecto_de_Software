@@ -87,5 +87,7 @@ El sistema incluye seed de datos iniciales:
 ## URLs
 Swagger: https://localhost:7129/swagger
 Frontend: https://localhost:7129/auth.html
+o
+http://127.0.0.1:5500/auth.html
 
 ---
