@@ -78,6 +78,8 @@ El backend está configurado para aceptar peticiones desde:
 -`http://127.0.0.1:5500` (Live Server - IP directa)
 -`null` (archivo local)
 
+Si necesitás agregar más orígenes, modificá Program.cs → AddCors().
+
 ## SEED
 El sistema incluye seed de datos iniciales:
 - **Evento**: Concierto de Rock
