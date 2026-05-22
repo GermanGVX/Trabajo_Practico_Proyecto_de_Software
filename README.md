@@ -63,6 +63,7 @@ dotnet run
 ```
 ### Frontend (Client)
 
+por seguridad borrar cache del navegador  `crl + shift + r`
 OPCIÓN A:
 - Ejecutá el backend y navegá a `https://localhost:7129/auth.html`
 - El backend sirve los archivos estáticos desde la carpeta `Client/`
@@ -92,4 +93,5 @@ Frontend: https://localhost:7129/auth.html
 o
 http://127.0.0.1:5500/auth.html
 
+ borrar la cache del navegador crl + shift + r
 ---
