@@ -48,7 +48,7 @@ cd Trabajo_Practico_Proyecto_de_software
 
 La URL de la API está parametrizada en `Client/js/config.js`:
 ```javascript 
-window.API_BASE_URL = "https://localhost:7129/api/v1";
+window.API_BASE_URL = "https://localhost:7129/api";
 ```
 *Abre tu terminal (consola de administrador de paquetes) y ejecuta los siguientes comandos para conectar a la base de datos:
 Update-Database
