@@ -1,4 +1,4 @@
-﻿const API_BASE = 'https://localhost:7129/api';
+﻿const API_BASE = window.API_BASE_URL || "https://localhost:7129/api/v1";
 
 // Verificar autenticación
 function checkAuth() {
