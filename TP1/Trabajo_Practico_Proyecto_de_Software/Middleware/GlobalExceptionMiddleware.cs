@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
 using Domain.Exceptions;
-using Microsoft.Extensions.Logging;
 
 namespace Trabajo_Practoco_Proyecto_de_Software.Middleware
 {

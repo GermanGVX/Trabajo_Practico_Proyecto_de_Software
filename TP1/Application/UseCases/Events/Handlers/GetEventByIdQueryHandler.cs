@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.Interface;
+﻿using Application.Interface;
 using Application.Interfaces;
 using Application.UseCases.Events.Querys;
 
@@ -21,7 +16,7 @@ namespace Application.UseCases.Events.Handlers
         public Task<GetEventByIdQuery> GetEventById(int eventId)
         {
             var events = _query.GetEvent(eventId);
-            if (events   == null)
+            if (events == null)
             {
                 throw new KeyNotFoundException($"Evento con ID {eventId} no encontrado");
             }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence
@@ -17,7 +12,7 @@ namespace Infrastructure.Persistence
         public DbSet<USER> user { get; set; }
         public DbSet<SECTOR> sector { get; set; }
         public DbSet<SEAT> seat { get; set; }
-        public DbSet<RESERVATION> reservation { get; set;}
+        public DbSet<RESERVATION> reservation { get; set; }
         public DbSet<EVENT> events { get; set; }
         public DbSet<AUDIT_LOG> audit { get; set; }
 
@@ -30,7 +25,7 @@ namespace Infrastructure.Persistence
                 entity.HasKey(e => e.Id);
 
                 entity.Property(t => t.Id).ValueGeneratedOnAdd();
-                
+
             });
 
             modelBuilder.Entity<SECTOR>(entity =>
@@ -38,7 +33,9 @@ namespace Infrastructure.Persistence
                 entity.ToTable("SECTOR");
 
                 entity.HasKey(e => e.Id);
-                entity.Property(t  => t.Id).ValueGeneratedOnAdd();
+                entity.Property(t => t.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Price).HasPrecision(18, 2);
 
                 entity.HasOne<EVENT>(e => e.Events)
                 .WithMany(e => e.sectors)
@@ -58,7 +55,7 @@ namespace Infrastructure.Persistence
                 .HasForeignKey(e => e.SectorId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-                
+
 
                 entity.Property(s => s.Version).IsConcurrencyToken();
             });
@@ -85,7 +82,7 @@ namespace Infrastructure.Persistence
                 entity.ToTable("USER");
 
                 entity.HasKey(e => e.Id);
-                entity.Property(t => t.Id).ValueGeneratedOnAdd(); 
+                entity.Property(t => t.Id).ValueGeneratedOnAdd();
             });
 
             modelBuilder.Entity<AUDIT_LOG>(entity =>
@@ -106,13 +103,13 @@ namespace Infrastructure.Persistence
         }
         private void SeedData(ModelBuilder modelBuilder)
         {
-            
+
             modelBuilder.Entity<EVENT>().HasData(
                 new EVENT
                 {
                     Id = 1,
                     Name = "Concierto de Rock",
-                    EventDate = new DateTime(2026, 6, 15, 20, 0, 0), 
+                    EventDate = new DateTime(2026, 6, 15, 20, 0, 0),
                     Venue = "Estadio Nacional",
                     Status = "Activo"
                 }
@@ -130,12 +127,12 @@ namespace Infrastructure.Persistence
             // Campo: GUIDs base "10000000-0000-0000-0000-000000000XXX"
             for (int i = 1; i <= 50; i++)
             {
-                string guidHex = i.ToString("X3").PadLeft(3, '0'); 
+                string guidHex = i.ToString("X3").PadLeft(3, '0');
                 string guidStr = $"10000000-0000-0000-0000-000000000{guidHex}";
 
                 seats.Add(new SEAT
                 {
-                    Id = Guid.Parse(guidStr), 
+                    Id = Guid.Parse(guidStr),
                     SectorId = 1,
                     RowIdentifier = "A",
                     SeatNumber = i,

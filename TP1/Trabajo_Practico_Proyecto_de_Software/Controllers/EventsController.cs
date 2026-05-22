@@ -1,11 +1,5 @@
-﻿using System.Reflection.Metadata;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Application.UseCases.Events.Commands;
-using Application.UseCases.Events.Handlers;
-using Application.UseCases.Sectors.Handlers;
-using Domain.Exceptions;
-using Infrastructure.Persistence.Repositories;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
@@ -30,10 +24,10 @@ namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
             _GetSeatsBySectorId = getSeatsBySectorId;
             _CreateReservation = createReservation;
         }
-       
+
 
         [HttpPost]
-        public async Task<IActionResult> CreateEvent( CreateEventCommand command)
+        public async Task<IActionResult> CreateEvent(CreateEventCommand command)
         {
             var eventId = await _CreateEvent.CreateEvent(command);
 

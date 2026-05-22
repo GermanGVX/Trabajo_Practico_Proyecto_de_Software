@@ -1,4 +1,5 @@
-﻿const API_URL = 'https://localhost:7129/api'; 
+﻿const API_URL = window.API_BASE_URL || "https://localhost:7129/api";
+
 
 function switchTab(tab) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
