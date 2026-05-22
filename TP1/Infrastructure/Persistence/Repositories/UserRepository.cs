@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Domain.Entities;
 using Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
@@ -32,14 +27,14 @@ namespace Infrastructure.Persistence.Repositories
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                
+
                 throw new ConcurrencyException(
                     "Conflicto de concurrencia: el recurso fue modificado por otro usuario."
                 );
             }
         }
 
-        public USER GetUser(int id) 
+        public USER GetUser(int id)
         {
             var user = _context.user
                 .FirstOrDefault(e => e.Id == id);

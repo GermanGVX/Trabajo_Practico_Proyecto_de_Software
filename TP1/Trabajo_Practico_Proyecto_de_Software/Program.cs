@@ -1,7 +1,6 @@
 using Application.Interface;
 using Application.Interfaces;
 using Application.UseCases.Events.Handlers;
-using Application.UseCases.Events.Querys;
 using Application.UseCases.Reservation.Handlers;
 using Application.UseCases.Seats.Handlers;
 using Application.UseCases.Sectors.Handlers;
@@ -9,8 +8,8 @@ using Application.UseCases.Users.Handlers;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Trabajo_Practoco_Proyecto_de_Software.Middleware;
 using Microsoft.Extensions.FileProviders;
+using Trabajo_Practoco_Proyecto_de_Software.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,6 +1,5 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
@@ -16,7 +15,7 @@ namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
             _getSeatsHandler = getSeatsHandler;
         }
 
-       
+
         [HttpGet("sector/{sectorId}")]
         public async Task<ActionResult<List<SeatResponseDto>>> GetBySector(int sectorId)
         {

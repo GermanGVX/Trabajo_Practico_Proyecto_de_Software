@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using Application.Interfaces;
 using Application.UseCases.Reservation.Commands;
-using Domain.Entities;
 using Domain.Exceptions;
 //using Microsoft.EntityFrameworkCore;
 

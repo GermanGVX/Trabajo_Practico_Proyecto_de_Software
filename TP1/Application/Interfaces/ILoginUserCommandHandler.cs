@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.UseCases.Users.Commands;
+﻿using Application.UseCases.Users.Commands;
 
 namespace Application.Interfaces
 {

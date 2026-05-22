@@ -1,11 +1,5 @@
 
-﻿using Domain.Entities;
-using System;
-
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Domain.Entities;
 
 
 namespace Application.Interfaces
@@ -15,7 +9,7 @@ namespace Application.Interfaces
 
         Task<List<SEAT>> GetBySectorIdAsync(int sectorId);
         Task<SEAT?> GetByIdAsync(Guid id);
-         Task UpdateAsync(SEAT seat);
+        Task UpdateAsync(SEAT seat);
         Task SaveChangesAsync();
 
     }

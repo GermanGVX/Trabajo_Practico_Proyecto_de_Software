@@ -1,9 +1,5 @@
-﻿using System;
-using System.Security.Cryptography;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using Application.Interfaces;
 using Application.UseCases.Users.Commands;
 
@@ -21,13 +17,13 @@ namespace Application.UseCases.Users.Handlers
         public async Task<int> LoginUser(LoginUserCommand command)
         {
             var user = await _userRepository.GetByEmailAsync(command.Email);
-            if(user == null)
+            if (user == null)
             {
                 throw new Exception("Usuario no existe");
             }
             var inputHash = HashPassword(command.Password);
 
-            if (user.PasswordHash != inputHash) 
+            if (user.PasswordHash != inputHash)
             {
                 throw new Exception("Contraseña incorrecta");
             }

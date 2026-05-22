@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,7 +17,7 @@ namespace Infrastructure.Jobs
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            
+
             _timer = new Timer(DoWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(60));
             return Task.CompletedTask;
         }
@@ -32,7 +26,7 @@ namespace Infrastructure.Jobs
         {
             try
             {
-               
+
                 using var scope = _serviceProvider.CreateScope();
                 var resRepo = scope.ServiceProvider.GetRequiredService<IReservationRepository>();
                 var seatRepo = scope.ServiceProvider.GetRequiredService<ISeatRepository>();
@@ -46,20 +40,20 @@ namespace Infrastructure.Jobs
                     var seat = await seatRepo.GetByIdAsync(reservation.SeatId);
                     if (seat?.Status == "Reserved")
                     {
-                        
+
                         seat.Status = "Available";
                         await seatRepo.UpdateAsync(seat);
 
-                        
+
                         reservation.Status = "Expired";
                         await resRepo.UpdateAsync(reservation);
 
-                        
+
                         await auditRepo.LogAsync(
                             action: "AUTO_RELEASE",
                             entityType: "SEAT",
                             entityId: seat.Id.ToString(),
-                            userId: null, 
+                            userId: null,
                             details: JsonSerializer.Serialize(new
                             {
                                 SeatId = seat.Id,
@@ -77,12 +71,12 @@ namespace Infrastructure.Jobs
 
                 if (expired.Count > 0)
                 {
-                    await seatRepo.SaveChangesAsync(); 
+                    await seatRepo.SaveChangesAsync();
                 }
             }
             catch (Exception ex)
             {
-                
+
                 Console.WriteLine($"[Background Job Error]: {ex.Message}");
             }
         }

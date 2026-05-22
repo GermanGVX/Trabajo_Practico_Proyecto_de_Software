@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Application.Interface;
+﻿using Application.Interface;
 using Domain.Entities;
 using Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Persistence.Repositories
 {
@@ -34,7 +28,7 @@ namespace Infrastructure.Persistence.Repositories
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                
+
                 throw new ConcurrencyException(
                     "Conflicto de concurrencia: el recurso fue modificado por otro usuario."
                 );
@@ -52,7 +46,7 @@ namespace Infrastructure.Persistence.Repositories
         {
             var events = _context.events
                 .FirstOrDefault(e => e.Id == eventId);
-            return events; 
+            return events;
         }
     }
 }

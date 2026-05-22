@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using Application.DTOs;
 using Application.Interfaces;
 using Application.UseCases.Events.Commands;
@@ -103,11 +98,11 @@ namespace Application.UseCases.Events.Handlers
             };
 
             await _reservationRepository.AddAsync(reservation);
-            
+
 
             try
             {
-                await _seatRepository.SaveChangesAsync(); 
+                await _seatRepository.SaveChangesAsync();
 
                 await _auditLogRepository.LogAsync(
                     action: "RESERVATION_SUCCESS",
@@ -159,6 +154,6 @@ namespace Application.UseCases.Events.Handlers
 
 
         }
-        
+
     }
 }
