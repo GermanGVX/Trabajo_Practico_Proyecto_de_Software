@@ -12,6 +12,10 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente en tu entorno de d
 * *Opcional:* SQL Server Management Studio (SSMS) o Azure Data Studio para visualizar la base de datos.
 
 ---
+## Estructura del Proyecto
+El proyecto está dividido en dos partes independientes:
+- **Backend (API)**: Carpeta `Trabajo_Practoco_Proyecto_de_Software/` - API REST con .NET 8
+- **Frontend (Client)**: Carpeta `Client/` - Interfaz HTML/CSS/JS vanilla
 
 ## Pasos para levantar el proyecto
 
@@ -26,6 +30,7 @@ cd Trabajo_Practico_Proyecto_de_software
 *Microsoft.EntityFrameworkCore.Design (9.0.15)
 
 *Microsoft.Extensions.Hosting.Abstractions (9.0.15)
+
 *Swashbuckle.AspNetCore (6.6.2)
 
 
@@ -38,10 +43,42 @@ cd Trabajo_Practico_Proyecto_de_software
 }
 
 
+
+##  Configuración del Frontend
+
+La URL de la API está parametrizada en `Client/js/config.js`:
+```javascript 
+window.API_BASE_URL = "https://localhost:7129/api/v1";
+```
 *Abre tu terminal (consola de administrador de paquetes) y ejecuta los siguientes comandos para conectar a la base de datos:
 Update-Database
 
-### URLs
+```markdown
+##  Ejecución
 
-* Swagger: https://localhost:7129/swagger/index.html
-* Front: https://localhost:7129/auth.html
+### Backend (API)
+```bash
+cd Trabajo_Practoco_Proyecto_de_Software
+dotnet run
+```
+### Frontend (Client)
+
+- Ejecutá el backend y navegá a `https://localhost:7129/auth.html`
+- El backend sirve los archivos estáticos desde la carpeta `Client/`
+
+### CORS
+El backend está configurado para aceptar peticiones desde:
+- `https://localhost:7129` (mismo origen)
+- `null` (archivo local)
+
+## SEED
+El sistema incluye seed de datos iniciales:
+- **Evento**: Concierto de Rock
+- **Sectores**: Campo ($5000) y Platea ($8000)
+- **Butacas**: 50 por sector
+
+## URLs
+Swagger: https://localhost:7129/swagger
+Frontend: https://localhost:7129/auth.html
+
+---
