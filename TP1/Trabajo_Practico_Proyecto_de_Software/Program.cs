@@ -10,6 +10,7 @@ using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Trabajo_Practoco_Proyecto_de_Software.Middleware;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,8 +58,20 @@ builder.Services.AddHostedService<Infrastructure.Jobs.ReleaseExpiredReservations
 var app = builder.Build();
 
 
+app.UseCors(policy => policy
+    .WithOrigins("https://localhost:7129", "null")
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+);
+
+
 //para front
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "..", "Client")),
+    RequestPath = ""
+});
 
 
 
