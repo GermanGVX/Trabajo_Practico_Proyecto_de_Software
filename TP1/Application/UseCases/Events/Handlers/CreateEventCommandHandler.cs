@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using Application.Interface;
 using Application.Interfaces;
 using Application.UseCases.Events.Commands;
 using Domain.Entities;

@@ -1,4 +1,3 @@
-using Application.Interface;
 using Application.Interfaces;
 using Application.UseCases.Events.Handlers;
 using Application.UseCases.Reservation.Handlers;
