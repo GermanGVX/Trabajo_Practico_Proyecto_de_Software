@@ -1,4 +1,4 @@
-﻿const API_BASE = window.API_BASE_URL || "https://localhost:7129/api";
+﻿const API_BASE = window.API_BASE_URL;
 
 
 //ux
@@ -88,10 +88,6 @@ function updateUserInfo() {
 }
 
 // Fetch con manejo de errores
-<<<<<<< HEAD
-
-=======
->>>>>>> main
 async function apiFetch(endpoint, options = {}, retries = 1) {
     const url = `${API_BASE}${endpoint}`;
 
@@ -115,19 +111,12 @@ async function apiFetch(endpoint, options = {}, retries = 1) {
         return data;
 
     } catch (error) {
-<<<<<<< HEAD
-        
-        const isGetMethod = !options.method || options.method.toUpperCase() === 'GET';
 
-        if (isGetMethod && retries > 0) {
-            console.warn(`Reintentando GET ${endpoint}... Intentos restantes: ${retries}`);
-            await new Promise(resolve => setTimeout(resolve, 1000));
-=======
 
         if (retries > 0) {
             console.warn(`Reintentando conexión a ${endpoint}... Intentos restantes: ${retries}`);
             await new Promise(resolve => setTimeout(resolve, 1000)); 
->>>>>>> main
+
             return await apiFetch(endpoint, options, retries - 1);
         }
 

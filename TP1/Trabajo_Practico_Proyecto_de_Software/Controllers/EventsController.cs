@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class EventsController : ControllerBase
     {
