@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (!currentEventId || !currentSectorId) {
         showMessage('Datos incompletos. Redirigiendo...', 'error');
+        showToast('Datos incompletos. Redirigiendo...', 'error');
         setTimeout(() => window.location.href = 'index.html', 1500);
         return;
     }
@@ -28,6 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loadSeats();
     } catch (error) {
         showMessage('Error: ' + error.message, 'error');
+        showToast('Error cargando información: ' + error.message, 'error');
     }
 });
 
@@ -43,12 +45,19 @@ async function loadSeats() {
 
         console.log(' Status:', response.status);
         console.log(' Content-Type:', response.headers.get('content-type'));
+    // Solo mostramos el texto de "Cargando" si el contenedor está totalmente vacío (primera carga).
+    // Si ya hay un mapa dibujado, NO lo borramos.
+    if (!container.innerHTML.trim()) {
+        container.innerHTML = '<p class="loading">⏳ Cargando asientos...</p>';
+    }
 
         if (!response.ok) {
             const errorText = await response.text();
             console.error('❌ Error HTTP:', errorText);
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
+    try {
+        console.log('Intentando cargar sector:', currentSectorId);
 
         
         const contentType = response.headers.get('content-type');
@@ -57,6 +66,10 @@ async function loadSeats() {
             console.error('❌ No es JSON:', text.substring(0, 200));
             throw new Error('El servidor no devolvió JSON válido');
         }
+        // 1. Usamos tu función apiFetch (que ya tiene los retries y manejo de errores incorporado)
+        // Nota: Asegurate de que la ruta sea correcta. Si en el backend es /api/Seat/..., 
+        // y API_BASE ya tiene "/api", entonces esto queda así:
+        const seats = await apiFetch(`/Seat/sector/${currentSectorId}`);
 
         const seats = await response.json();
         console.log('✅ Asientos recibidos:', seats.length);
@@ -64,6 +77,7 @@ async function loadSeats() {
 
         if (seats.length === 0) {
             container.innerHTML = '<p class="loading">No hay asientos en este sector</p>';
+            container.innerHTML = '<p class="message info">No hay asientos en este sector</p>';
             return;
         }
 
@@ -103,8 +117,10 @@ async function loadSeats() {
             `;
         });
 
+        // 2. RECARGA SELECTIVA: Recién ACÁ, cuando todo salió bien, reemplazamos el HTML.
         container.innerHTML = html;
         console.log('✅ Mapa renderizado correctamente');
+
     } catch (error) {
         console.error('❌ Error cargando asientos:', error);
         container.innerHTML = `
@@ -112,6 +128,15 @@ async function loadSeats() {
                 ⚠️ Error: ${error.message}<br>
                 <small>Revisá la consola (F12) para más detalles</small>
             </p>`;
+
+        // 3. FEEDBACK AL USUARIO SIN DESTRUIR EL MAPA
+        // Mostramos la alerta bonita que flota en la pantalla
+        showToast(`⚠️ No se pudo actualizar el mapa de asientos`, 'error');
+
+        // Si el mapa estaba vacío (falló en la primera carga), ahí sí dejamos un mensaje
+        if (container.innerHTML.includes('Cargando asientos')) {
+            container.innerHTML = `<p class="message error">No se pudo cargar el mapa. Verificá tu conexión.</p>`;
+        }
     }
 }
 
@@ -163,6 +188,15 @@ async function reserveSeat(seatId, seatNumber, row) {
             button.textContent = originalText;
             loadSeats();
         }, 1500);
+        // ACTUALIZACIÓN SELECTIVA: 
+        // No llamamos a loadSeats(). Solo modificamos el botón que el usuario clickeó.
+        button.textContent = originalText; // Le devolvemos el número (le sacamos el '...')
+
+        // Si el error fue porque alguien más la ganó, la marcamos como ocupada visualmente
+        button.classList.remove('available');
+        button.classList.add('reserved'); // Cambiá 'reserved' por la clase CSS que uses para los ocupados
+        button.disabled = true; // Lo dejamos bloqueado para que no lo vuelva a intentar
+        button.removeAttribute('onclick'); // Le sacamos la acción
     }
 }
 
