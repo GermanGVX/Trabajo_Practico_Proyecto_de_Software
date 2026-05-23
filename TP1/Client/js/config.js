@@ -1,2 +1,2 @@
 // Configuraci�n global de la API
-window.API_BASE_URL = "https://localhost:7129/api";
+window.API_BASE_URL = "https://localhost:7129/api/v1";
