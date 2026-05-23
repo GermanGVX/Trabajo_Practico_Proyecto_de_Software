@@ -8,11 +8,10 @@ using System.Text.Json;
 
 namespace Infrastructure.Jobs
 {
-    // 1. Heredamos de BackgroundService (Moderno y nativo para tareas asíncronas)
     public class ReleaseExpiredReservationsJob : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<ReleaseExpiredReservationsJob> _logger; // 2. Agregamos el Logger
+        private readonly ILogger<ReleaseExpiredReservationsJob> _logger; 
 
         public ReleaseExpiredReservationsJob(IServiceProvider serviceProvider, ILogger<ReleaseExpiredReservationsJob> logger)
         {
@@ -20,12 +19,11 @@ namespace Infrastructure.Jobs
             _logger = logger;
         }
 
-        // 3. Este método reemplaza al StartAsync y al DoWork. ¡Y devuelve Task!
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("Background Job de reservas expiradas iniciado.");
 
-            // Usamos PeriodicTimer (no te obliga a usar async void)
+            // Usamos PeriodicTimer
             using var timer = new PeriodicTimer(TimeSpan.FromSeconds(60));
 
             while (await timer.WaitForNextTickAsync(stoppingToken))
@@ -47,25 +45,21 @@ namespace Infrastructure.Jobs
                 var expired = await resRepo.GetExpiredReservationsAsync(now);
 
                 if (!expired.Any())
-                    return; // Si no hay nada vencido, cortamos acá para ahorrar recursos
+                    return; 
 
-                // --- 4. SOLUCIÓN AL PROBLEMA N+1 ---
-                // En vez de buscar asiento por asiento en un foreach, agarramos todos los IDs
                 var seatIds = expired.Select(r => r.SeatId).Distinct().ToList();
 
                 // Traemos todas las butacas juntas en 1 sola consulta
-                // (Nota: Vas a tener que crear este método GetByIdsAsync en tu ISeatRepository)
                 var seats = await seatRepo.GetByIdsAsync(seatIds);
 
-                var seatsToUpdate = new List<SEAT>(); // Asumiendo que tu entidad se llama Seat
+                var seatsToUpdate = new List<SEAT>(); 
                 var reservationsToUpdate = new List<RESERVATION>();
 
                 foreach (var reservation in expired)
                 {
                     var Seat = seats.FirstOrDefault(s => s.Id == reservation.SeatId);
 
-                    // 5. SOLUCIÓN A LOS STRINGS HARDCODEADOS
-                    // Usamos nameof() simulando que tenés un Enum, o directamente el Enum si tu BD lo soporta
+
                     if (Seat != null && Seat.Status == nameof(SeatStatus.Reserved))
                     {
                         Seat.Status = nameof(SeatStatus.Available);
@@ -74,7 +68,6 @@ namespace Infrastructure.Jobs
                         reservation.Status = nameof(ReservationStatus.Expired);
                         reservationsToUpdate.Add(reservation);
 
-                        // El audit puede quedar individual o podés hacer un LogRangeAsync si tenés muchos
                         await auditRepo.LogAsync(
                             action: "AUTO_RELEASE",
                             entityType: "SEAT",
@@ -94,10 +87,10 @@ namespace Infrastructure.Jobs
                     }
                 }
 
-                // Guardamos todo de golpe al final (1 solo viaje a la BD)
+                // Guardamos todo de golpe al final
                 if (seatsToUpdate.Any())
                 {
-                    await seatRepo.UpdateRangeAsync(seatsToUpdate); // Creado en tu repo para procesar listas
+                    await seatRepo.UpdateRangeAsync(seatsToUpdate);
                     await resRepo.UpdateRangeAsync(reservationsToUpdate);
 
                     await seatRepo.SaveChangesAsync();
@@ -107,7 +100,6 @@ namespace Infrastructure.Jobs
             }
             catch (Exception ex)
             {
-                // Reemplazamos el Console.WriteLine por el Logger
                 _logger.LogError(ex, "[Background Job Error]: Hubo un problema al procesar reservas expiradas.");
             }
         }

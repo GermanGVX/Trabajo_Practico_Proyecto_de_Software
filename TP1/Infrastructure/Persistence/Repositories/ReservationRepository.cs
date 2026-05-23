@@ -37,14 +37,12 @@ namespace Infrastructure.Persistence.Repositories
             return await _context.reservation.FindAsync(id);
         }
 
-        // (¡Warning solucionado! Le sacamos el async y pusimos Task.CompletedTask)
         public Task UpdateAsync(RESERVATION reservation)
         {
             _context.reservation.Update(reservation);
             return Task.CompletedTask;
         }
 
-        // --- NUEVO MÉTODO PARA ACTUALIZACIÓN MASIVA (N+1) ---
         public Task UpdateRangeAsync(IEnumerable<RESERVATION> reservations)
         {
             _context.reservation.UpdateRange(reservations);

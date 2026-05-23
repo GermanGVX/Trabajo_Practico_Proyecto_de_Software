@@ -27,7 +27,6 @@ namespace Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
-        // --- NUEVO MÉTODO PARA SOLUCIONAR N+1 ---
         public async Task<List<SEAT>> GetByIdsAsync(IEnumerable<Guid> ids)
         {
             return await _context.seat
@@ -41,7 +40,6 @@ namespace Infrastructure.Persistence.Repositories
             return Task.CompletedTask;
         }
 
-        // --- NUEVO MÉTODO PARA ACTUALIZACIÓN MASIVA (N+1) ---
         public Task UpdateRangeAsync(IEnumerable<SEAT> seats)
         {
             _context.seat.UpdateRange(seats);
