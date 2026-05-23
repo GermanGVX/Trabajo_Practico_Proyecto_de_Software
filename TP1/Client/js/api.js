@@ -1,17 +1,12 @@
 ﻿const API_BASE = window.API_BASE_URL || "https://localhost:7129/api";
 
 
+//ux
 
-// ==========================================
-// 1. UTILIDADES DE UX
-// ==========================================
-
-// Alertas/Toast diferenciadas por tipo
 window.showToast = function (mensaje, tipo = 'error') {
     const toast = document.createElement('div');
     toast.textContent = mensaje;
 
-    // Colores dependiendo del tipo (rojo, verde, azul)
     let colorFondo = '#ef4444';
     if (tipo === 'success') colorFondo = '#22c55e';
     if (tipo === 'info') colorFondo = '#3b82f6';
@@ -32,7 +27,6 @@ window.showToast = function (mensaje, tipo = 'error') {
 
     document.body.appendChild(toast);
 
-    // Se oculta solo a los 3 segundos
     setTimeout(() => {
         toast.style.opacity = '0';
         setTimeout(() => toast.remove(), 300);
@@ -45,16 +39,15 @@ window.toggleButtonLoading = function (buttonId, isLoading, loadingText = '⏳ P
     if (!button) return;
 
     if (isLoading) {
-        // Guardamos el texto original si no lo habíamos guardado antes
+
         if (!button.dataset.originalText) {
             button.dataset.originalText = button.innerHTML;
         }
         button.innerHTML = loadingText;
-        button.disabled = true; // Evita el doble click / submit
+        button.disabled = true;
         button.style.opacity = '0.7';
         button.style.cursor = 'not-allowed';
     } else {
-        // Restauramos el botón a su estado normal
         button.innerHTML = button.dataset.originalText || 'Aceptar';
         button.disabled = false;
         button.style.opacity = '1';
@@ -64,7 +57,6 @@ window.toggleButtonLoading = function (buttonId, isLoading, loadingText = '⏳ P
 
 
 
-// CODIGO BUENO
 // Verificar autenticación
 function checkAuth() {
     const userId = localStorage.getItem('userId');
@@ -96,20 +88,9 @@ function updateUserInfo() {
 }
 
 // Fetch con manejo de errores
-async function apiFetch(endpoint, options = {}) {
 async function apiFetch(endpoint, options = {}, retries = 1) {
     const url = `${API_BASE}${endpoint}`;
-    const response = await fetch(url, {
-        headers: { 'Content-Type': 'application/json', ...options.headers },
-        ...options
-    });
 
-   
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('text/html')) {
-        const html = await response.text();
-        throw new Error(`El servidor devolvió HTML en lugar de JSON. Revisa la ruta: ${endpoint}`);
-    }
     try {
         const response = await fetch(url, {
             headers: { 'Content-Type': 'application/json', ...options.headers },
@@ -130,18 +111,13 @@ async function apiFetch(endpoint, options = {}, retries = 1) {
         return data;
 
     } catch (error) {
-        // LÓGICA DE RETRY: Si falla y nos quedan intentos, esperamos 1 segundo y volvemos a intentar
+
         if (retries > 0) {
             console.warn(`Reintentando conexión a ${endpoint}... Intentos restantes: ${retries}`);
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Pausa de 1s
+            await new Promise(resolve => setTimeout(resolve, 1000)); 
             return await apiFetch(endpoint, options, retries - 1);
         }
 
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.error || `Error ${response.status}`);
-        // Si ya agotó los intentos, lanza el error final
         throw error;
     }
-    return data;
 }
