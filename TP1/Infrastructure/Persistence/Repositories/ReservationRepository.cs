@@ -13,6 +13,7 @@ namespace Infrastructure.Persistence.Repositories
         {
             _context = context;
         }
+
         public async Task AddAsync(RESERVATION reservation)
         {
             await _context.reservation.AddAsync(reservation);
@@ -31,9 +32,23 @@ namespace Infrastructure.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task UpdateAsync(RESERVATION reservation)
+        public async Task<RESERVATION?> GetByIdAsync(Guid id)
+        {
+            return await _context.reservation.FindAsync(id);
+        }
+
+        // (¡Warning solucionado! Le sacamos el async y pusimos Task.CompletedTask)
+        public Task UpdateAsync(RESERVATION reservation)
         {
             _context.reservation.Update(reservation);
+            return Task.CompletedTask;
+        }
+
+        // --- NUEVO MÉTODO PARA ACTUALIZACIÓN MASIVA (N+1) ---
+        public Task UpdateRangeAsync(IEnumerable<RESERVATION> reservations)
+        {
+            _context.reservation.UpdateRange(reservations);
+            return Task.CompletedTask;
         }
 
         public async Task SaveChangesAsync()
@@ -44,18 +59,10 @@ namespace Infrastructure.Persistence.Repositories
             }
             catch (DbUpdateConcurrencyException ex)
             {
-
                 throw new ConcurrencyException(
                     "Conflicto de concurrencia: el recurso fue modificado por otro usuario."
                 );
             }
         }
-
-        public async Task<RESERVATION?> GetByIdAsync(Guid id)
-        {
-            return await _context.reservation.FindAsync(id);
-        }
-
-
     }
 }
