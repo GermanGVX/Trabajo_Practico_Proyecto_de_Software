@@ -96,20 +96,10 @@ function updateUserInfo() {
 }
 
 // Fetch con manejo de errores
-async function apiFetch(endpoint, options = {}) {
+
 async function apiFetch(endpoint, options = {}, retries = 1) {
     const url = `${API_BASE}${endpoint}`;
-    const response = await fetch(url, {
-        headers: { 'Content-Type': 'application/json', ...options.headers },
-        ...options
-    });
 
-   
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('text/html')) {
-        const html = await response.text();
-        throw new Error(`El servidor devolvió HTML en lugar de JSON. Revisa la ruta: ${endpoint}`);
-    }
     try {
         const response = await fetch(url, {
             headers: { 'Content-Type': 'application/json', ...options.headers },
@@ -118,7 +108,7 @@ async function apiFetch(endpoint, options = {}, retries = 1) {
 
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('text/html')) {
-            throw new Error(`Error de ruta (HTML recibido): ${endpoint}`);
+            throw new Error(`El servidor devolvió HTML en lugar de JSON. Revisa la ruta: ${endpoint}`);
         }
 
         const data = await response.json();
@@ -130,18 +120,15 @@ async function apiFetch(endpoint, options = {}, retries = 1) {
         return data;
 
     } catch (error) {
-        // LÓGICA DE RETRY: Si falla y nos quedan intentos, esperamos 1 segundo y volvemos a intentar
-        if (retries > 0) {
-            console.warn(`Reintentando conexión a ${endpoint}... Intentos restantes: ${retries}`);
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Pausa de 1s
+        
+        const isGetMethod = !options.method || options.method.toUpperCase() === 'GET';
+
+        if (isGetMethod && retries > 0) {
+            console.warn(`Reintentando GET ${endpoint}... Intentos restantes: ${retries}`);
+            await new Promise(resolve => setTimeout(resolve, 1000));
             return await apiFetch(endpoint, options, retries - 1);
         }
 
-    const data = await response.json();
-    if (!response.ok) {
-        throw new Error(data.error || `Error ${response.status}`);
-        // Si ya agotó los intentos, lanza el error final
         throw error;
     }
-    return data;
 }

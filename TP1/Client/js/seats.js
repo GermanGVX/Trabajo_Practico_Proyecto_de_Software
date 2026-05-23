@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        
+
         const events = await apiFetch('/events');
         const event = events.find(e => e.id == currentEventId);
         document.getElementById('eventName').textContent = event?.name || 'Evento';
@@ -40,69 +40,66 @@ async function loadSeats() {
     try {
         console.log(' Intentando cargar sector:', currentSectorId);
 
-        
+
         const response = await fetch(`${API_BASE}/Seat/sector/${currentSectorId}`);
 
         console.log(' Status:', response.status);
         console.log(' Content-Type:', response.headers.get('content-type'));
-    // Solo mostramos el texto de "Cargando" si el contenedor está totalmente vacío (primera carga).
-    // Si ya hay un mapa dibujado, NO lo borramos.
-    if (!container.innerHTML.trim()) {
-        container.innerHTML = '<p class="loading">⏳ Cargando asientos...</p>';
-    }
+
+        if (!container.innerHTML.trim()) {
+            container.innerHTML = '<p class="loading">⏳ Cargando asientos...</p>';
+        }
 
         if (!response.ok) {
             const errorText = await response.text();
             console.error('❌ Error HTTP:', errorText);
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
-    try {
-        console.log('Intentando cargar sector:', currentSectorId);
-
         
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-            const text = await response.text();
-            console.error('❌ No es JSON:', text.substring(0, 200));
-            throw new Error('El servidor no devolvió JSON válido');
-        }
-        // 1. Usamos tu función apiFetch (que ya tiene los retries y manejo de errores incorporado)
-        // Nota: Asegurate de que la ruta sea correcta. Si en el backend es /api/Seat/..., 
-        // y API_BASE ya tiene "/api", entonces esto queda así:
-        const seats = await apiFetch(`/Seat/sector/${currentSectorId}`);
+            console.log('Intentando cargar sector:', currentSectorId);
 
-        const seats = await response.json();
-        console.log('✅ Asientos recibidos:', seats.length);
-        console.log('🪑 Primer asiento:', seats[0]);
 
-        if (seats.length === 0) {
-            container.innerHTML = '<p class="loading">No hay asientos en este sector</p>';
-            container.innerHTML = '<p class="message info">No hay asientos en este sector</p>';
-            return;
-        }
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                const text = await response.text();
+                console.error('❌ No es JSON:', text.substring(0, 200));
+                throw new Error('El servidor no devolvió JSON válido');
+            }
 
-        
-        const rows = {};
-        seats.forEach(seat => {
-            console.log(`Asiento ${seat.seatNumber}: Status="${seat.status}", Row="${seat.rowIdentifier}"`);
-            const row = seat.rowIdentifier || 'A';
-            if (!rows[row]) rows[row] = [];
-            rows[row].push(seat);
-        });
+            const seats = await apiFetch(`/Seat/sector/${currentSectorId}`);
 
-        const sortedRows = Object.keys(rows).sort();
-        let html = '';
+            
+            console.log('✅ Asientos recibidos:', seats.length);
+            console.log('🪑 Primer asiento:', seats[0]);
 
-        sortedRows.forEach(row => {
-            html += `
+            if (seats.length === 0) {
+                container.innerHTML = '<p class="loading">No hay asientos en este sector</p>';
+                container.innerHTML = '<p class="message info">No hay asientos en este sector</p>';
+                return;
+            }
+
+
+            const rows = {};
+            seats.forEach(seat => {
+                console.log(`Asiento ${seat.seatNumber}: Status="${seat.status}", Row="${seat.rowIdentifier}"`);
+                const row = seat.rowIdentifier || 'A';
+                if (!rows[row]) rows[row] = [];
+                rows[row].push(seat);
+            });
+
+            const sortedRows = Object.keys(rows).sort();
+            let html = '';
+
+            sortedRows.forEach(row => {
+                html += `
                 <div class="seat-row">
                     <div class="row-label">Fila ${row}</div>
                     <div class="seats-grid">
                         ${rows[row].map(seat => {
-                const statusLower = (seat.status || '').toLowerCase();
-                const isAvailable = statusLower === 'available';
+                    const statusLower = (seat.status || '').toLowerCase();
+                    const isAvailable = statusLower === 'available';
 
-                return `
+                    return `
                                 <button class="seat ${statusLower}" 
                                         data-seat-id="${seat.id}" 
                                         data-seat-number="${seat.seatNumber}"
@@ -111,99 +108,96 @@ async function loadSeats() {
                                     ${seat.seatNumber}
                                 </button>
                             `;
-            }).join('')}
+                }).join('')}
                     </div>
                 </div>
             `;
-        });
+            });
 
-        // 2. RECARGA SELECTIVA: Recién ACÁ, cuando todo salió bien, reemplazamos el HTML.
-        container.innerHTML = html;
-        console.log('✅ Mapa renderizado correctamente');
+            container.innerHTML = html;
+            console.log('✅ Mapa renderizado correctamente');
 
-    } catch (error) {
-        console.error('❌ Error cargando asientos:', error);
-        container.innerHTML = `
+        } catch (error) {
+            console.error('❌ Error cargando asientos:', error);
+            container.innerHTML = `
             <p class="message error">
                 ⚠️ Error: ${error.message}<br>
                 <small>Revisá la consola (F12) para más detalles</small>
             </p>`;
 
-        // 3. FEEDBACK AL USUARIO SIN DESTRUIR EL MAPA
-        // Mostramos la alerta bonita que flota en la pantalla
-        showToast(`⚠️ No se pudo actualizar el mapa de asientos`, 'error');
 
-        // Si el mapa estaba vacío (falló en la primera carga), ahí sí dejamos un mensaje
-        if (container.innerHTML.includes('Cargando asientos')) {
-            container.innerHTML = `<p class="message error">No se pudo cargar el mapa. Verificá tu conexión.</p>`;
+            showToast(`⚠️ No se pudo actualizar el mapa de asientos`, 'error');
+
+
+            if (container.innerHTML.includes('Cargando asientos')) {
+                container.innerHTML = `<p class="message error">No se pudo cargar el mapa. Verificá tu conexión.</p>`;
+            }
         }
     }
-}
+
 
 
 
 async function reserveSeat(seatId, seatNumber, row) {
-    const userId = checkAuth();
-    if (!userId) return;
+        const userId = checkAuth();
+        if (!userId) return;
 
-    const button = document.querySelector(`[data-seat-id="${seatId}"]`);
-    const originalText = button.textContent;
-    button.disabled = true;
-    button.textContent = '...';
+        const button = document.querySelector(`[data-seat-id="${seatId}"]`);
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = '...';
 
-    try {
-        const reservation = await apiFetch('/reservations', {
-            method: 'POST',
-            body: JSON.stringify({ seatId: seatId, userId: parseInt(userId) })
-        });
-        const sectors = await apiFetch(`/events/${currentEventId}/sectors`);
-        const currentSector = sectors.find(s => s.id == currentSectorId);
-        const sectorPrice = currentSector?.price || 0;
-        
-        const reservationData = {
-            id: reservation.id,
-            seatNumber: seatNumber,
-            row: row,
-            sectorName: document.getElementById('sectorName').textContent,
-            eventName: document.getElementById('eventName').textContent,
-            price: sectorPrice, 
-            expiresAt: new Date(Date.now() + 5 * 60 * 1000).toISOString()
-        };
+        try {
+            const reservation = await apiFetch('/reservations', {
+                method: 'POST',
+                body: JSON.stringify({ seatId: seatId, userId: parseInt(userId) })
+            });
+            const sectors = await apiFetch(`/events/${currentEventId}/sectors`);
+            const currentSector = sectors.find(s => s.id == currentSectorId);
+            const sectorPrice = currentSector?.price || 0;
 
-        
-        sessionStorage.setItem(`reservation_${reservation.id}`, JSON.stringify(reservationData));
+            const reservationData = {
+                id: reservation.id,
+                seatNumber: seatNumber,
+                row: row,
+                sectorName: document.getElementById('sectorName').textContent,
+                eventName: document.getElementById('eventName').textContent,
+                price: sectorPrice,
+                expiresAt: new Date(Date.now() + 5 * 60 * 1000).toISOString()
+            };
 
-        console.log('✅ Datos guardados:', reservationData);
-        console.log('🔑 Clave usada:', `reservation_${reservation.id}`);
 
-        // Redirigir
-        window.location.href = `checkout.html?reservation=${reservation.id}`;
+            sessionStorage.setItem(`reservation_${reservation.id}`, JSON.stringify(reservationData));
 
-    } catch (error) {
-        console.error("Reserva fallida:", error);
-        showMessage(`❌ ${error.message}<br>La butaca ya no está disponible.`, 'error');
+            console.log('✅ Datos guardados:', reservationData);
+            console.log('🔑 Clave usada:', `reservation_${reservation.id}`);
 
-        setTimeout(() => {
-            button.disabled = false;
-            button.textContent = originalText;
-            loadSeats();
-        }, 1500);
-        // ACTUALIZACIÓN SELECTIVA: 
-        // No llamamos a loadSeats(). Solo modificamos el botón que el usuario clickeó.
-        button.textContent = originalText; // Le devolvemos el número (le sacamos el '...')
+            // Redirigir
+            window.location.href = `checkout.html?reservation=${reservation.id}`;
 
-        // Si el error fue porque alguien más la ganó, la marcamos como ocupada visualmente
-        button.classList.remove('available');
-        button.classList.add('reserved'); // Cambiá 'reserved' por la clase CSS que uses para los ocupados
-        button.disabled = true; // Lo dejamos bloqueado para que no lo vuelva a intentar
-        button.removeAttribute('onclick'); // Le sacamos la acción
+        } catch (error) {
+            console.error("Reserva fallida:", error);
+            showMessage(`❌ ${error.message}<br>La butaca ya no está disponible.`, 'error');
+
+            setTimeout(() => {
+                button.disabled = false;
+                button.textContent = originalText;
+                loadSeats();
+            }, 1500);
+            
+            button.textContent = originalText; 
+
+            button.classList.remove('available');
+            button.classList.add('reserved'); 
+            button.disabled = true; 
+            button.removeAttribute('onclick'); 
+        }
     }
-}
 
 
-function showMessage(text, type) {
-    const box = document.getElementById('messageBox');
-    box.innerHTML = text;
-    box.className = `message ${type} show`;
-    setTimeout(() => box.classList.remove('show'), 6000);
-}
+    function showMessage(text, type) {
+        const box = document.getElementById('messageBox');
+        box.innerHTML = text;
+        box.className = `message ${type} show`;
+        setTimeout(() => box.classList.remove('show'), 6000);
+    }
