@@ -88,6 +88,10 @@ function updateUserInfo() {
 }
 
 // Fetch con manejo de errores
+<<<<<<< HEAD
+
+=======
+>>>>>>> main
 async function apiFetch(endpoint, options = {}, retries = 1) {
     const url = `${API_BASE}${endpoint}`;
 
@@ -99,7 +103,7 @@ async function apiFetch(endpoint, options = {}, retries = 1) {
 
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('text/html')) {
-            throw new Error(`Error de ruta (HTML recibido): ${endpoint}`);
+            throw new Error(`El servidor devolvió HTML en lugar de JSON. Revisa la ruta: ${endpoint}`);
         }
 
         const data = await response.json();
@@ -111,10 +115,19 @@ async function apiFetch(endpoint, options = {}, retries = 1) {
         return data;
 
     } catch (error) {
+<<<<<<< HEAD
+        
+        const isGetMethod = !options.method || options.method.toUpperCase() === 'GET';
+
+        if (isGetMethod && retries > 0) {
+            console.warn(`Reintentando GET ${endpoint}... Intentos restantes: ${retries}`);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+=======
 
         if (retries > 0) {
             console.warn(`Reintentando conexión a ${endpoint}... Intentos restantes: ${retries}`);
             await new Promise(resolve => setTimeout(resolve, 1000)); 
+>>>>>>> main
             return await apiFetch(endpoint, options, retries - 1);
         }
 
