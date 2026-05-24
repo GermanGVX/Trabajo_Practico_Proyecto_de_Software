@@ -5,17 +5,19 @@ using Microsoft.AspNetCore.Http;
 
 namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
 {
+
     /// <summary>
     /// Gestiona la consulta y visualización del mapa de butacas/asientos.
     /// </summary>
     [Tags("Asientos")]
-    [Route("api/[controller]")]
+
+    [Route("api/v1/[controller]")]
     [ApiController]
-    public class SeatController : ControllerBase
+    public class SeatsController : ControllerBase
     {
         private readonly IGetSeatBySectorIdQueryHandler _getSeatsHandler;
 
-        public SeatController(IGetSeatBySectorIdQueryHandler getSeatsHandler)
+        public SeatsController(IGetSeatBySectorIdQueryHandler getSeatsHandler)
         {
             _getSeatsHandler = getSeatsHandler;
         }
@@ -27,10 +29,13 @@ namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
         /// <response code="200">Lista de asientos retornada exitosamente.</response>
         /// <response code="400">El formato del ID del sector es inválido.</response>
         /// <response code="404">No se encontró el sector solicitado o no tiene asientos cargados.</response>
-        [HttpGet("sector/{sectorId}")]
+        [HttpGet("/api/v1/sectors/{sectorId}/seats")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+
+
+
         public async Task<ActionResult<List<SeatResponseDto>>> GetBySector(int sectorId)
         {
             var seats = await _getSeatsHandler.GetSeatBySectorId(sectorId);

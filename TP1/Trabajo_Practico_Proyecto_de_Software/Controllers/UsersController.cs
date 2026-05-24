@@ -5,11 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
 {
+
     /// <summary>
     /// Gestiona el registro, autenticación y consulta de usuarios del sistema.
     /// </summary>
     [Tags("Usuarios")]
-    [Route("api/[controller]")]
+
+    [Route("api/v1/[controller]")]
+
     [ApiController]
     public class UsersController : ControllerBase
     {

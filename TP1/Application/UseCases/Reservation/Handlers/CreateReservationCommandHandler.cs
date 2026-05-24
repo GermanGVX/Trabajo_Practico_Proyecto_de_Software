@@ -1,12 +1,12 @@
 ﻿using System.Text.Json;
 using Application.DTOs;
 using Application.Interfaces;
-using Application.UseCases.Events.Commands;
+using Application.UseCases.Reservation.Commands;
 using Domain.Entities;
 using Domain.Exceptions;
-//using Microsoft.EntityFrameworkCore;
 
-namespace Application.UseCases.Events.Handlers
+
+namespace Application.UseCases.Reservation.Handlers
 {
     public class CreateReservationCommandHandler : ICreateReservationCommandHandler
     {
@@ -39,6 +39,7 @@ namespace Application.UseCases.Events.Handlers
                         Reason = "Asiento no encontrado en la base de datos"
                     })
                 );
+                await _auditLogRepository.SaveChangesAsync(); 
                 throw new KeyNotFoundException("La butaca solicitada no existe.");
             }
 
@@ -60,6 +61,7 @@ namespace Application.UseCases.Events.Handlers
                     Reason = "Butaca ya no está disponible"
                 })
                 );
+                await _auditLogRepository.SaveChangesAsync();
                 throw new InvalidOperationException("La butaca no está disponible.");
 
             }
@@ -81,6 +83,7 @@ namespace Application.UseCases.Events.Handlers
                     OptimisticLockVersion = seat.Version
                 })
                 );
+                await _auditLogRepository.SaveChangesAsync();
                 throw new InvalidOperationException("La butaca ya tiene una reserva activa.");
             }
 
@@ -99,58 +102,53 @@ namespace Application.UseCases.Events.Handlers
 
             await _reservationRepository.AddAsync(reservation);
 
+            var auditDetails = JsonSerializer.Serialize(new
+            {
+                SeatNumber = seat.SeatNumber,
+                Row = seat.RowIdentifier,
+                SectorId = seat.SectorId,
+                ReservationId = reservation.Id,
+                ExpiresAt = reservation.ExpiresAt,
+                ReservedAt = reservation.ReservedAt,
+                TimeoutMinutes = 5
+            });
 
+            await _auditLogRepository.LogAsync(
+                action: "RESERVATION_SUCCESS",
+                entityType: "SEAT",
+                entityId: seat.Id.ToString(),
+                userId: command.UserId,
+                details: auditDetails
+            );
             try
             {
                 await _seatRepository.SaveChangesAsync();
 
-                await _auditLogRepository.LogAsync(
-                    action: "RESERVATION_SUCCESS",
-                    entityType: "SEAT",
-                    entityId: seat.Id.ToString(),
-                    userId: command.UserId,
-                    details: JsonSerializer.Serialize(new
-                    {
-                        SeatNumber = seat.SeatNumber,
-                        Row = seat.RowIdentifier,
-                        SectorId = seat.SectorId,
-                        ReservationId = reservation.Id,
-                        ExpiresAt = reservation.ExpiresAt,
-                        ReservedAt = reservation.ReservedAt,
-                        TimeoutMinutes = 5,
-                        CreatedAt = DateTime.UtcNow
-                    })
-                );
-
-                return new ReservationResponseDto
-                {
-                    Id = reservation.Id,
-                    SeatId = reservation.SeatId,
-                    Status = reservation.Status,
-                    ReservedAt = reservation.ReservedAt,
-                    ExpiresAt = reservation.ExpiresAt,
-                    Message = "Butaca reservada exitosamente. Tienes 5 minutos para completar el pago."
-                };
+                
             }
             catch (ConcurrencyException)
             {
                 await _auditLogRepository.LogAsync(
-                    action: "RESERVATION_CONFLICT",
+                    action: "RESERVATION_DB_CONFLICT",
                     entityType: "SEAT",
                     entityId: command.SeatId.ToString(),
                     userId: command.UserId,
-                    details: JsonSerializer.Serialize(new
-                    {
-                        SeatNumber = seat.SeatNumber,
-                        Row = seat.RowIdentifier,
-                        ConflictAt = DateTime.UtcNow,
-                        Reason = "Another user reserved this seat simultaneously",
-                        OptimisticLockVersion = seat.Version
-                    })
+                    details: JsonSerializer.Serialize(new { ConflictAt = DateTime.UtcNow, Reason = "Optimistic Locking" })
                 );
+                await _auditLogRepository.SaveChangesAsync();
 
                 throw new ConflictException("La butaca fue reservada por otro usuario.");
             }
+
+            return new ReservationResponseDto
+            {
+                Id = reservation.Id,
+                SeatId = reservation.SeatId,
+                Status = reservation.Status,
+                ReservedAt = reservation.ReservedAt,
+                ExpiresAt = reservation.ExpiresAt,
+                Message = "Butaca reservada exitosamente. Tienes 5 minutos para completar el pago."
+            };
 
 
         }

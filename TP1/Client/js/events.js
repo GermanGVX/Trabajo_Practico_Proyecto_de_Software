@@ -15,7 +15,7 @@ async function loadEvents() {
 
     try {
         const events = await apiFetch('/events');
-
+        console.log(events);
         if (events.length === 0) {
             container.innerHTML = '<p class="loading">No hay eventos disponibles</p>';
             return;

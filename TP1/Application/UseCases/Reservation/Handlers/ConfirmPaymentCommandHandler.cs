@@ -37,32 +37,33 @@ namespace Application.UseCases.Reservation.Handlers
             await _seatRepo.UpdateAsync(seat);
             await _reservationRepo.UpdateAsync(reservation);
 
+            // 2. Auditoría 
+            await _auditRepo.LogAsync(
+                action: "PAYMENT_CONFIRMED",
+                entityType: "RESERVATION",
+                entityId: reservation.Id.ToString(),
+                userId: reservation.UserId,
+                details: JsonSerializer.Serialize(new
+                {
+                    ReservationId = reservation.Id,
+                    SeatId = reservation.SeatId,
+                    SeatNumber = seat.SeatNumber,
+                    Row = seat.RowIdentifier,
+                    ConfirmedAt = DateTime.UtcNow,
+                    ReservedAt = reservation.ReservedAt,
+                    TimeToComplete = TimeSpan.FromSeconds((DateTime.UtcNow - reservation.ReservedAt).TotalSeconds),
+                    PaymentMethod = "Simulado"
+                })
+            );
+
             try
             {
-                // 2. Commit atómico (ACID)
+                // 3. Commit
                 await _seatRepo.SaveChangesAsync();
-
-                // 3. Auditoría inmutable
-                await _auditRepo.LogAsync(
-                    action: "PAYMENT_CONFIRMED",
-                    entityType: "RESERVATION",
-                    entityId: reservation.Id.ToString(),
-                    userId: reservation.UserId,
-                    details: JsonSerializer.Serialize(new
-                    {
-                        ReservationId = reservation.Id,
-                        SeatId = reservation.SeatId,
-                        SeatNumber = seat.SeatNumber,
-                        Row = seat.RowIdentifier,
-                        ConfirmedAt = DateTime.UtcNow,
-                        ReservedAt = reservation.ReservedAt,
-                        TimeToComplete = TimeSpan.FromSeconds((DateTime.UtcNow - reservation.ReservedAt).TotalSeconds),
-                        PaymentMethod = "Simulado"
-                    })
-                );
             }
             catch (ConcurrencyException)
             {
+
                 await _auditRepo.LogAsync(
                     action: "PAYMENT_CONFLICT",
                     entityType: "RESERVATION",
@@ -77,6 +78,7 @@ namespace Application.UseCases.Reservation.Handlers
                         OptimisticLockVersion = seat.Version
                     })
                 );
+
                 throw new ConflictException("No se pudo confirmar el pago. Intente nuevamente.");
             }
         }

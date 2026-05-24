@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
+
         const events = await apiFetch('/events');
         const event = events.find(e => e.id == currentEventId);
         document.getElementById('eventName').textContent = event?.name || 'Evento';
@@ -32,10 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function loadSeats() {
     const container = document.getElementById('seatsContainer');
-
-    if (!container.innerHTML.trim()) {
-        container.innerHTML = '<p class="loading">⏳ Cargando asientos...</p>';
-    }
+    container.innerHTML = '<p class="loading">⏳ Cargando asientos...</p>';
 
     try {
         console.log('Intentando cargar sector:', currentSectorId);
@@ -44,19 +42,31 @@ async function loadSeats() {
 
         console.log('✅ Grupos recibidos:', groupedSeats.length);
 
+
         if (groupedSeats.length === 0) {
             container.innerHTML = '<p class="message info">No hay asientos en este sector</p>';
             return;
         }
 
+        const rows = {};
+        seats.forEach(seat => {
+            console.log(`Asiento ${seat.seatNumber}: Status="${seat.status}", Row="${seat.rowIdentifier}"`);
+            const row = seat.rowIdentifier || 'A';
+            if (!rows[row]) rows[row] = [];
+            rows[row].push(seat);
+        });
+
+        const sortedRows = Object.keys(rows).sort();
         let html = '';
 
         groupedSeats.forEach(group => {
             html += `
+
                 <div class="seat-row">
                     <div class="row-label">Fila ${group.row}</div>
                     <div class="seats-grid">
                         ${group.seats.map(seat => {
+
                 const statusLower = (seat.status || '').toLowerCase();
                 const isAvailable = statusLower === 'available';
 
@@ -85,9 +95,8 @@ async function loadSeats() {
                                 </button>
                             `;
             }).join('')}
-                    </div>
                 </div>
-            `;
+            </div>`;
         });
 
         container.innerHTML = html;
@@ -95,19 +104,19 @@ async function loadSeats() {
 
     } catch (error) {
         console.error('❌ Error cargando asientos:', error);
-
         showToast(`⚠️ No se pudo actualizar el mapa de asientos`, 'error');
 
+        const container = document.getElementById('seatsContainer');
         if (container.innerHTML.includes('Cargando asientos')) {
             container.innerHTML = `<p class="message error">No se pudo cargar el mapa. Verificá tu conexión.</p>`;
         }
     }
-}
+} 
 
 
 async function reserveSeat(seatId, seatNumber, row) {
-    const userId = checkAuth();
-    if (!userId) return;
+        const userId = checkAuth();
+        if (!userId) return;
 
     const button = document.querySelector(`[data-seat-id="${seatId}"]`);
 

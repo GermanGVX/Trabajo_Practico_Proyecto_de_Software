@@ -99,7 +99,7 @@ async function apiFetch(endpoint, options = {}, retries = 1) {
 
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('text/html')) {
-            throw new Error(`Error de ruta (HTML recibido): ${endpoint}`);
+            throw new Error(`El servidor devolvió HTML en lugar de JSON. Revisa la ruta: ${endpoint}`);
         }
 
         const data = await response.json();
@@ -112,9 +112,11 @@ async function apiFetch(endpoint, options = {}, retries = 1) {
 
     } catch (error) {
 
+
         if (retries > 0) {
             console.warn(`Reintentando conexión a ${endpoint}... Intentos restantes: ${retries}`);
             await new Promise(resolve => setTimeout(resolve, 1000)); 
+
             return await apiFetch(endpoint, options, retries - 1);
         }
 

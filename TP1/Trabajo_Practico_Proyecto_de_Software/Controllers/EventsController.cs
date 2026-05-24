@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Http;
 
 namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
 {
+
     /// <summary>
     /// Gestiona la creación y consulta de espectáculos/eventos y sus respectivos sectores.
     /// </summary>
     [Tags("Eventos")]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
 
     public class EventsController : ControllerBase
