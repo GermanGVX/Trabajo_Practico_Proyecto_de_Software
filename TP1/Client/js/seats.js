@@ -40,31 +40,23 @@ async function loadSeats() {
     try {
         console.log('Intentando cargar sector:', currentSectorId);
 
-        const seats = await apiFetch(`/Seat/sector/${currentSectorId}`);
+        const groupedSeats = await apiFetch(`/Seat/sector/${currentSectorId}`);
 
-        console.log('✅ Asientos recibidos:', seats.length);
+        console.log('✅ Grupos recibidos:', groupedSeats.length);
 
-        if (seats.length === 0) {
+        if (groupedSeats.length === 0) {
             container.innerHTML = '<p class="message info">No hay asientos en este sector</p>';
             return;
         }
 
-        const rows = {};
-        seats.forEach(seat => {
-            const row = seat.rowIdentifier || 'A';
-            if (!rows[row]) rows[row] = [];
-            rows[row].push(seat);
-        });
-
-        const sortedRows = Object.keys(rows).sort();
         let html = '';
 
-        sortedRows.forEach(row => {
+        groupedSeats.forEach(group => {
             html += `
                 <div class="seat-row">
-                    <div class="row-label">Fila ${row}</div>
+                    <div class="row-label">Fila ${group.row}</div>
                     <div class="seats-grid">
-                        ${rows[row].map(seat => {
+                        ${group.seats.map(seat => {
                 const statusLower = (seat.status || '').toLowerCase();
                 const isAvailable = statusLower === 'available';
 
@@ -86,11 +78,10 @@ async function loadSeats() {
                                         title="Asiento ${seat.seatNumber} - ${estadoTexto}"
                                         aria-label="Asiento ${seat.seatNumber} - ${estadoTexto}"
                                         ${!isAvailable ? 'disabled' : ''}
-                                        ${isAvailable ? `onclick="reserveSeat('${seat.id}', ${seat.seatNumber}, '${row}')"` : ''}>
+                                        ${isAvailable ? `onclick="reserveSeat('${seat.id}', ${seat.seatNumber}, '${group.row}')"` : ''}>
                                     
                                     ${iconoSvg}
                                     <span class="seat-number">${seat.seatNumber}</span>
-                                    
                                 </button>
                             `;
             }).join('')}
@@ -100,7 +91,7 @@ async function loadSeats() {
         });
 
         container.innerHTML = html;
-        console.log('✅ Mapa renderizado correctamente');
+        console.log('✅ Mapa renderizado correctamente con datos agrupados');
 
     } catch (error) {
         console.error('❌ Error cargando asientos:', error);
@@ -112,7 +103,6 @@ async function loadSeats() {
         }
     }
 }
-
 
 
 async function reserveSeat(seatId, seatNumber, row) {
