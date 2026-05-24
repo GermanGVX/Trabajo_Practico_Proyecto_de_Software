@@ -15,7 +15,7 @@ namespace Infrastructure.Persistence.Repositories
 
         public async Task<List<SECTOR>> GetByEventIdAsync(int eventId)
         {
-            return await _context.sector
+            return await _context.Sectors
                 .Where(s => s.EventId == eventId)
                 .OrderBy(s => s.Name)
                 .ToListAsync();

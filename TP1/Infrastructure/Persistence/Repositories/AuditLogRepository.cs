@@ -25,7 +25,7 @@ namespace Infrastructure.Persistence.Repositories
                 CreatedAt = DateTime.UtcNow,
             };
 
-            await _context.audit.AddAsync(auditLog);
+            await _context.AuditLogs.AddAsync(auditLog);
             await _context.SaveChangesAsync();
         }
 

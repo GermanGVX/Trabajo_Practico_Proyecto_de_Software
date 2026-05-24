@@ -36,11 +36,11 @@ namespace Infrastructure.Persistence.Repositories
 
         public USER GetUser(int id)
         {
-            var user = _context.user
+            var users = _context.Users
                 .FirstOrDefault(e => e.Id == id);
-            return user;
+            return users;
         }
         public async Task<USER?> GetByEmailAsync(string email) =>
-            await _context.user.FirstOrDefaultAsync(u => u.Email == email.ToLower());
+            await _context.Users.FirstOrDefaultAsync(u => u.Email == email.ToLower());
     }
 }

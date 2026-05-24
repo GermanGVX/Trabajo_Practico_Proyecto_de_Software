@@ -17,7 +17,7 @@ namespace Infrastructure.Persistence.Repositories
         public async Task InsertEvent(EVENT Event)
         {
 
-            await _context.events.AddAsync(Event);
+            await _context.Events.AddAsync(Event);
         }
 
         public async Task SaveChangesAsync()
@@ -37,14 +37,14 @@ namespace Infrastructure.Persistence.Repositories
 
         public async Task<List<EVENT>> GetListEvents()
         {
-            return await _context.events
+            return await _context.Events
                 .AsNoTracking()
                 .ToListAsync();
         }
 
         public EVENT GetEvent(int eventId)
         {
-            var events = _context.events
+            var events = _context.Events
                 .FirstOrDefault(e => e.Id == eventId);
             return events;
         }
