@@ -38,30 +38,19 @@ async function loadSeats() {
     try {
         console.log('Intentando cargar sector:', currentSectorId);
 
-        const groupedSeats = await apiFetch(`/Seat/sector/${currentSectorId}`);
+        const groupedSeats = await apiFetch(`/sectors/${currentSectorId}/seats`);
 
         console.log('✅ Grupos recibidos:', groupedSeats.length);
-
 
         if (groupedSeats.length === 0) {
             container.innerHTML = '<p class="message info">No hay asientos en este sector</p>';
             return;
         }
 
-        const rows = {};
-        seats.forEach(seat => {
-            console.log(`Asiento ${seat.seatNumber}: Status="${seat.status}", Row="${seat.rowIdentifier}"`);
-            const row = seat.rowIdentifier || 'A';
-            if (!rows[row]) rows[row] = [];
-            rows[row].push(seat);
-        });
-
-        const sortedRows = Object.keys(rows).sort();
         let html = '';
 
         groupedSeats.forEach(group => {
             html += `
-
                 <div class="seat-row">
                     <div class="row-label">Fila ${group.row}</div>
                     <div class="seats-grid">
@@ -95,8 +84,9 @@ async function loadSeats() {
                                 </button>
                             `;
             }).join('')}
+                    </div>
                 </div>
-            </div>`;
+            `;
         });
 
         container.innerHTML = html;
