@@ -9,12 +9,12 @@ namespace Infrastructure.Persistence
             : base(options)
         {
         }
-        public DbSet<USER> user { get; set; }
-        public DbSet<SECTOR> sector { get; set; }
-        public DbSet<SEAT> seat { get; set; }
-        public DbSet<RESERVATION> reservation { get; set; }
-        public DbSet<EVENT> events { get; set; }
-        public DbSet<AUDIT_LOG> audit { get; set; }
+        public DbSet<USER> Users { get; set; }
+        public DbSet<SECTOR> Sectors { get; set; }
+        public DbSet<SEAT> Seats { get; set; }
+        public DbSet<RESERVATION> Reservations { get; set; }
+        public DbSet<EVENT> Events { get; set; }
+        public DbSet<AUDIT_LOG> AuditLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +26,13 @@ namespace Infrastructure.Persistence
 
                 entity.Property(t => t.Id).ValueGeneratedOnAdd();
 
+                // Límites de string
+                entity.Property(e => e.Name).HasMaxLength(150).IsRequired();
+                entity.Property(e => e.Venue).HasMaxLength(150);
+                entity.Property(e => e.Status).HasMaxLength(50);
+
+                // Índice
+                entity.HasIndex(e => e.Name);
             });
 
             modelBuilder.Entity<SECTOR>(entity =>
@@ -35,7 +42,9 @@ namespace Infrastructure.Persistence
                 entity.HasKey(e => e.Id);
                 entity.Property(t => t.Id).ValueGeneratedOnAdd();
 
+                // El HasPrecision
                 entity.Property(e => e.Price).HasPrecision(18, 2);
+                entity.Property(e => e.Name).HasMaxLength(100).IsRequired();
 
                 entity.HasOne<EVENT>(e => e.Events)
                 .WithMany(e => e.sectors)
@@ -46,9 +55,12 @@ namespace Infrastructure.Persistence
             modelBuilder.Entity<SEAT>(entity =>
             {
                 entity.ToTable("SEAT");
-
                 entity.HasKey(e => e.Id);
                 entity.Property(t => t.Id).ValueGeneratedOnAdd();
+
+                // Límites
+                entity.Property(e => e.RowIdentifier).HasMaxLength(10).IsRequired();
+                entity.Property(e => e.Status).HasMaxLength(50).IsRequired();
 
                 entity.HasOne<SECTOR>(e => e.sector)
                 .WithMany(e => e.Seats)
@@ -58,13 +70,18 @@ namespace Infrastructure.Persistence
 
 
                 entity.Property(s => s.Version).IsConcurrencyToken();
+
+                // Índice
+                entity.HasIndex(e => new { e.SectorId, e.RowIdentifier, e.SeatNumber }).IsUnique();
             });
 
             modelBuilder.Entity<RESERVATION>(entity =>
             {
                 entity.ToTable("RESERVATION");
-
                 entity.HasKey(e => e.Id);
+
+                // Límite para el estado
+                entity.Property(e => e.Status).HasMaxLength(50);
 
                 entity.HasOne(r => r.user)
                     .WithMany(u => u.reserva)
@@ -75,6 +92,9 @@ namespace Infrastructure.Persistence
                     .WithMany()
                     .HasForeignKey(r => r.SeatId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                // Índice
+                entity.HasIndex(e => e.ExpiresAt);
             });
 
             modelBuilder.Entity<USER>(entity =>
@@ -83,6 +103,12 @@ namespace Infrastructure.Persistence
 
                 entity.HasKey(e => e.Id);
                 entity.Property(t => t.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Name).HasMaxLength(150);
+                entity.Property(e => e.Email).HasMaxLength(150);
+                entity.Property(e => e.PasswordHash).HasMaxLength(255);
+
+                entity.HasIndex(e => e.Email).IsUnique();
             });
 
             modelBuilder.Entity<AUDIT_LOG>(entity =>
@@ -91,6 +117,9 @@ namespace Infrastructure.Persistence
 
                 entity.HasKey(e => e.Id);
                 entity.Property(t => t.Id).ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Action).HasMaxLength(100);
+                entity.Property(e => e.EntityType).HasMaxLength(100);
 
                 entity.HasOne<USER>()
                 .WithMany()

@@ -13,39 +13,45 @@ namespace Infrastructure.Persistence.Repositories
         {
             _context = context;
         }
+
         public async Task AddAsync(RESERVATION reservation)
         {
-            await _context.reservation.AddAsync(reservation);
+            await _context.Reservations.AddAsync(reservation);
         }
 
         public async Task<RESERVATION?> GetActiveBySeatIdAsync(Guid seatId)
         {
-            return await _context.reservation
+            return await _context.Reservations
                 .FirstOrDefaultAsync(r => r.SeatId == seatId && r.Status == "Pending");
         }
 
         public async Task<List<RESERVATION>> GetExpiredReservationsAsync(DateTime threshold)
         {
-            return await _context.reservation
+            return await _context.Reservations
                 .Where(r => r.Status == "Pending" && r.ExpiresAt < threshold)
                 .ToListAsync();
         }
 
-        public async Task UpdateAsync(RESERVATION reservation)
+        public async Task<RESERVATION?> GetByIdAsync(Guid id)
         {
-            _context.reservation.Update(reservation);
+            return await _context.Reservations.FindAsync(id);
+        }
+
+        public Task UpdateAsync(RESERVATION reservation)
+        {
+            _context.Reservations.Update(reservation);
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateRangeAsync(IEnumerable<RESERVATION> reservations)
+        {
+            _context.Reservations.UpdateRange(reservations);
+            return Task.CompletedTask;
         }
 
         public async Task SaveChangesAsync()
         {
                 await _context.SaveChangesAsync();
         }
-
-        public async Task<RESERVATION?> GetByIdAsync(Guid id)
-        {
-            return await _context.reservation.FindAsync(id);
-        }
-
-
     }
 }

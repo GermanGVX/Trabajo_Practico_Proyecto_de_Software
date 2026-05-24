@@ -12,26 +12,40 @@ namespace Infrastructure.Persistence.Repositories
         public SeatRepository(AppDbContext context)
         {
             _context = context;
-
         }
+
         public async Task<SEAT?> GetByIdAsync(Guid id)
         {
-            return await _context.seat.FindAsync(id);
+            return await _context.Seats.FindAsync(id);
         }
-
 
         public async Task<List<SEAT>> GetBySectorIdAsync(int sectorId)
         {
-            return await _context.seat
+            return await _context.Seats
                 .Where(s => s.SectorId == sectorId)
                 .OrderBy(s => s.SeatNumber)
                 .ToListAsync();
         }
+
+        public async Task<List<SEAT>> GetByIdsAsync(IEnumerable<Guid> ids)
+        {
+            return await _context.Seats
+                .Where(s => ids.Contains(s.Id))
+                .ToListAsync();
+        }
+
         public Task UpdateAsync(SEAT seat)
         {
-            _context.seat.Update(seat);
+            _context.Seats.Update(seat);
             return Task.CompletedTask;
         }
+
+        public Task UpdateRangeAsync(IEnumerable<SEAT> seats)
+        {
+            _context.Seats.UpdateRange(seats);
+            return Task.CompletedTask;
+        }
+
         public async Task SaveChangesAsync()
         {
             try
@@ -40,10 +54,8 @@ namespace Infrastructure.Persistence.Repositories
             }
             catch (DbUpdateConcurrencyException ex)
             {
-
                 throw new ConcurrencyException("Conflicto de concurrencia: el recurso fue modificado por otro usuario.");
             }
         }
-
     }
 }

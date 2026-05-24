@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace Application.Interface
+namespace Application.Interfaces
 {
     public interface IEventRepository
     {

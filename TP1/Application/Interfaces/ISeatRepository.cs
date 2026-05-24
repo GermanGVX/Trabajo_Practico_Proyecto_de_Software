@@ -9,6 +9,10 @@ namespace Application.Interfaces
 
         Task<List<SEAT>> GetBySectorIdAsync(int sectorId);
         Task<SEAT?> GetByIdAsync(Guid id);
+
+        Task<List<SEAT>> GetByIdsAsync(IEnumerable<Guid> ids);
+        Task UpdateRangeAsync(IEnumerable<SEAT> seats);
+
         Task UpdateAsync(SEAT seat);
         Task SaveChangesAsync();
 

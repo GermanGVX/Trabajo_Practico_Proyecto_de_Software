@@ -1,5 +1,4 @@
-﻿using Application.Interface;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Application.UseCases.Events.Querys;
 
 namespace Application.UseCases.Events.Handlers

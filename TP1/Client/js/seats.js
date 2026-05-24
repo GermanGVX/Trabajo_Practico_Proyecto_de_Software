@@ -38,51 +38,59 @@ async function loadSeats() {
     try {
         console.log('Intentando cargar sector:', currentSectorId);
 
-        const seats = await apiFetch(`/sectors/${currentSectorId}/seats`);
-        console.log('✅ Asientos recibidos:', seats.length);
+        const groupedSeats = await apiFetch(`/sectors/${currentSectorId}/seats`);
 
-        if (seats.length === 0) {
+        console.log('✅ Grupos recibidos:', groupedSeats.length);
+
+        if (groupedSeats.length === 0) {
             container.innerHTML = '<p class="message info">No hay asientos en este sector</p>';
             return;
         }
 
-        
-        const rows = {};
-        seats.forEach(seat => {
-            console.log(`Asiento ${seat.seatNumber}: Status="${seat.status}", Row="${seat.rowIdentifier}"`);
-            const row = seat.rowIdentifier || 'A';
-            if (!rows[row]) rows[row] = [];
-            rows[row].push(seat);
-        });
-
-        const sortedRows = Object.keys(rows).sort();
         let html = '';
 
-        sortedRows.forEach(row => {
+        groupedSeats.forEach(group => {
             html += `
-            <div class="seat-row">
-                <div class="row-label">Fila ${row}</div>
-                <div class="seats-grid">
-                    ${rows[row].map(seat => {
+                <div class="seat-row">
+                    <div class="row-label">Fila ${group.row}</div>
+                    <div class="seats-grid">
+                        ${group.seats.map(seat => {
+
                 const statusLower = (seat.status || '').toLowerCase();
                 const isAvailable = statusLower === 'available';
 
+                let estadoTexto = 'Desconocido';
+                if (statusLower === 'available') estadoTexto = 'Disponible';
+                else if (statusLower === 'reserved' || statusLower === 'pending') estadoTexto = 'En proceso';
+                else if (statusLower === 'sold' || statusLower === 'not available') estadoTexto = 'Vendido';
+
+                const iconoSvg = `
+                                <svg class="seat-icon" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M7 13c-1.1 0-2 .9-2 2v4h14v-4c0-1.1-.9-2-2-2H7zM17 10V7c0-1.66-1.34-3-3-3h-4c-1.66 0-3 1.34-3 3v3H5v4h14v-4h-2z"/>
+                                </svg>
+                            `;
+
                 return `
-                    <button class="seat ${statusLower}" 
-                            data-seat-id="${seat.id}" 
-                            data-seat-number="${seat.seatNumber}"
-                            ${!isAvailable ? 'disabled' : ''}
-                            ${isAvailable ? `onclick="reserveSeat('${seat.id}', ${seat.seatNumber}, '${row}')"` : ''}>
-                        ${seat.seatNumber}
-                    </button>
-                `;
+                                <button type="button" class="seat ${statusLower}" 
+                                        data-seat-id="${seat.id}" 
+                                        data-seat-number="${seat.seatNumber}"
+                                        title="Asiento ${seat.seatNumber} - ${estadoTexto}"
+                                        aria-label="Asiento ${seat.seatNumber} - ${estadoTexto}"
+                                        ${!isAvailable ? 'disabled' : ''}
+                                        ${isAvailable ? `onclick="reserveSeat('${seat.id}', ${seat.seatNumber}, '${group.row}')"` : ''}>
+                                    
+                                    ${iconoSvg}
+                                    <span class="seat-number">${seat.seatNumber}</span>
+                                </button>
+                            `;
             }).join('')}
+                    </div>
                 </div>
-            </div>`;
+            `;
         });
 
         container.innerHTML = html;
-        console.log('✅ Mapa renderizado correctamente');
+        console.log('✅ Mapa renderizado correctamente con datos agrupados');
 
     } catch (error) {
         console.error('❌ Error cargando asientos:', error);
@@ -96,17 +104,18 @@ async function loadSeats() {
 } 
 
 
-
 async function reserveSeat(seatId, seatNumber, row) {
         const userId = checkAuth();
         if (!userId) return;
 
     const button = document.querySelector(`[data-seat-id="${seatId}"]`);
-    const originalText = button.textContent;
+
+    const numberSpan = button.querySelector('.seat-number');
+    const originalNumber = numberSpan.textContent;
 
     // --- 1. ESTADO OPTIMISTA ---
     button.disabled = true;
-    button.textContent = '⏳';
+    numberSpan.textContent = '⏳';
 
     try {
         const reservation = await apiFetch('/reservations', {
@@ -136,9 +145,10 @@ async function reserveSeat(seatId, seatNumber, row) {
         console.error("Reserva fallida:", error);
 
         // --- 3. ROLLBACK VISUAL ---
-        button.textContent = originalText;
+        numberSpan.textContent = originalNumber;
 
         const mensajeError = error.message.toLowerCase();
+
 
         if (mensajeError.includes('not available') || mensajeError.includes('400') || mensajeError.includes('reserv')) {
             button.classList.remove('available');
