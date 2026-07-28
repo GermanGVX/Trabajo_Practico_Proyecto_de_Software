@@ -69,7 +69,7 @@ namespace Infrastructure.Persistence
 
 
 
-                entity.Property(s => s.Version).IsConcurrencyToken();
+                entity.Property(s => s.Version).IsRowVersion();
 
                 // Índice
                 entity.HasIndex(e => new { e.SectorId, e.RowIdentifier, e.SeatNumber }).IsUnique();
@@ -166,7 +166,7 @@ namespace Infrastructure.Persistence
                     RowIdentifier = "A",
                     SeatNumber = i,
                     Status = "Available",
-                    Version = 0
+                    
                 });
             }
 
@@ -183,7 +183,7 @@ namespace Infrastructure.Persistence
                     RowIdentifier = "B",
                     SeatNumber = i,
                     Status = "Available",
-                    Version = 0
+                   
                 });
             }
 

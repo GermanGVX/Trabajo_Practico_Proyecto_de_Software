@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿
+using System.Text.Json;
 using Application.DTOs;
 using Application.Interfaces;
 using Application.UseCases.Reservation.Commands;
@@ -126,7 +127,7 @@ namespace Application.UseCases.Reservation.Handlers
 
                 
             }
-            catch (ConcurrencyException)
+            catch (Exception ex) when (ex.GetType().Name == "DbUpdateConcurrencyException")
             {
                 await _auditLogRepository.LogAsync(
                     action: "RESERVATION_DB_CONFLICT",

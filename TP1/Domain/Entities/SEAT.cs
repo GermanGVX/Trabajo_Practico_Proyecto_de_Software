@@ -9,7 +9,7 @@
         public string RowIdentifier { get; set; }
         public int SeatNumber { get; set; }
         public string Status { get; set; }
-        public int Version { get; set; }
+        public byte[] Version { get; set; }
 
         public SECTOR sector { get; set; } = null!;
 
