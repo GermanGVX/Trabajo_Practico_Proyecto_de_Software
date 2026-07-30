@@ -40,7 +40,7 @@ namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
         /// <returns>La ruta para consultar el evento recién creado.</returns>
         /// <response code="201">Evento creado exitosamente.</response>
         /// <response code="400">Error de validación en los datos enviados.</response>
-        [HttpPost] // <-- Solo un HttpPost
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
         public async Task<IActionResult> CreateEvent(CreateEventCommand command)

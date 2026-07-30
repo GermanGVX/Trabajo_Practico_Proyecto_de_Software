@@ -22,7 +22,6 @@ namespace Application.UseCases.Events.Handlers
         {
             var (events, total) = await _repository.GetPagedAsync(request.Page, request.PageSize);
 
-            // ¡Acá agregamos el mapeo de los datos!
             var dtoList = events.Select(e => new EventResponseDto
             {
                 Id = e.Id,

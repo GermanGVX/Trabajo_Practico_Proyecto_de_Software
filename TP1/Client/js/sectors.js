@@ -44,4 +44,4 @@
             container.innerHTML = `<p class="message error">Error: ${error.message}</p>`;
         }
     }
-}); // <-- ¡ACÁ ESTÁ EL CIERRE QUE FALTABA!
+});
