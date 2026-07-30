@@ -6,22 +6,23 @@
     const eventId = urlParams.get('event');
 
     if (!eventId) {
-        showMessage('Evento no especificado', 'error');
+        console.error('Evento no especificado');
         return;
     }
 
     try {
-        // 1. Obtener nombre del evento
-        const events = await apiFetch('/events');
-        const event = events.find(e => e.id == eventId);
-        document.getElementById('eventName').textContent = event?.name || 'Evento';
+        // 1. Obtener nombre del evento desde la memoria
+        const savedEventName = sessionStorage.getItem('currentEventName');
+        if (savedEventName) {
+            document.getElementById('eventName').textContent = savedEventName;
+        }
 
         // 2. Cargar sectores
         const sectors = await apiFetch(`/events/${eventId}/sectors`);
         const container = document.getElementById('sectorsContainer');
 
         if (sectors.length === 0) {
-            container.innerHTML = '<p class="loading">No hay sectores disponibles para este evento</p>';
+            container.innerHTML = '<p class="loading">No hay sectores disponibles</p>';
             return;
         }
 
@@ -33,8 +34,14 @@
                 <p class="sector-capacity">🪑 ${sector.capacity} butacas disponibles</p>
                 <button class="btn btn-primary">Ver Mapa de Asientos</button>
             </div>
+
         `).join('');
+
     } catch (error) {
-        showMessage('Error al cargar sectores: ' + error.message, 'error');
+        console.error(error);
+        const container = document.getElementById('sectorsContainer');
+        if (container) {
+            container.innerHTML = `<p class="message error">Error: ${error.message}</p>`;
+        }
     }
-});
+}); // <-- ¡ACÁ ESTÁ EL CIERRE QUE FALTABA!

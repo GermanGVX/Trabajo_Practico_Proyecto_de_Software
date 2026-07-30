@@ -48,5 +48,20 @@ namespace Infrastructure.Persistence.Repositories
                 .FirstOrDefault(e => e.Id == eventId);
             return events;
         }
+
+        public async Task<(List<EVENT>, int)> GetPagedAsync(int page, int size)
+        {
+            var query = _context.Events.AsNoTracking();
+
+            var total = await query.CountAsync();
+
+            var data = await query.OrderBy(e => e.Id)
+                                  .Skip((page - 1) * size)
+                                  .Take(size)
+                                  .ToListAsync();
+
+            return (data, total);
+        }
+
     }
 }

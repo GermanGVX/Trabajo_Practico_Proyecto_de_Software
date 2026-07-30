@@ -1,7 +1,8 @@
 ﻿using Application.Interfaces;
 using Application.UseCases.Events.Commands;
-using Microsoft.AspNetCore.Mvc;
+using Application.UseCases.Events.Querys;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
 {
@@ -17,16 +18,16 @@ namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
     {
         private readonly ICreateEventCommandHandler _CreateEvent;
         private readonly IGetEventByIdQueryHandler _GetEventById;
-        private readonly IGetAllEventsQueryHandler _GetAllEvent;
+        private readonly IGetPagedEventsHandler _GetPagedEvents;
         private readonly IGetSectorsByEventIdQueryHandler _GetSectorsByEventId;
         private readonly ICreateReservationCommandHandler _CreateReservation;
         private readonly IGetSeatBySectorIdQueryHandler _GetSeatsBySectorId;
 
-        public EventsController(ICreateEventCommandHandler createEvent, IGetEventByIdQueryHandler getEventById, IGetAllEventsQueryHandler getAllEvent, IGetSectorsByEventIdQueryHandler getSectorsByEventId, IGetSeatBySectorIdQueryHandler getSeatsBySectorId, ICreateReservationCommandHandler createReservation)
+        public EventsController(ICreateEventCommandHandler createEvent, IGetEventByIdQueryHandler getEventById, IGetPagedEventsHandler getPagedEvents, IGetSectorsByEventIdQueryHandler getSectorsByEventId, IGetSeatBySectorIdQueryHandler getSeatsBySectorId, ICreateReservationCommandHandler createReservation)
         {
             _CreateEvent = createEvent;
             _GetEventById = getEventById;
-            _GetAllEvent = getAllEvent;
+            _GetPagedEvents = getPagedEvents;
             _GetSectorsByEventId = getSectorsByEventId;
             _GetSeatsBySectorId = getSeatsBySectorId;
             _CreateReservation = createReservation;
@@ -54,15 +55,18 @@ namespace Trabajo_Practoco_Proyecto_de_Software.Controllers
         }
 
         /// <summary>
-        /// Obtiene el listado de todos los eventos disponibles.
+        /// Obtiene el listado paginado de los eventos disponibles.
         /// </summary>
-        /// <returns>Una lista completa de eventos.</returns>
+        /// <param name="query">Parámetros de paginación (ej: PageNumber y PageSize).</param>
+        /// <returns>Una lista paginada de eventos.</returns>
         /// <response code="200">Lista de eventos retornada exitosamente.</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAllEvent()
+        public async Task<IActionResult> GetAllEvent([FromQuery] GetPagedEventsQuery query)
         {
-            var result = await _GetAllEvent.GetAllEvents();
+            // Le pasamos el query con los parámetros (PageNumber, PageSize) a tu nuevo handler
+            var result = await _GetPagedEvents.GetPagedEvents(query);
+
             return Ok(result);
         }
 

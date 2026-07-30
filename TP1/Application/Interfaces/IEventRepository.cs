@@ -8,5 +8,7 @@ namespace Application.Interfaces
         Task SaveChangesAsync();
         Task<List<EVENT>> GetListEvents();
         EVENT GetEvent(int eventId);
+
+        Task<(List<EVENT>, int)> GetPagedAsync(int page, int size);
     }
 }

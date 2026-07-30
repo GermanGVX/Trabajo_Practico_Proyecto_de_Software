@@ -17,9 +17,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     try {
 
-        const events = await apiFetch('/events');
-        const event = events.find(e => e.id == currentEventId);
-        document.getElementById('eventName').textContent = event?.name || 'Evento';
+        const savedEventName = sessionStorage.getItem('currentEventName');
+        document.getElementById('eventName').textContent = savedEventName || 'Evento';
 
         const sectors = await apiFetch(`/events/${currentEventId}/sectors`);
         const sector = sectors.find(s => s.id == currentSectorId);
