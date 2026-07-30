@@ -8,9 +8,10 @@ using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.OpenApi;
 using System.Reflection;
-using Trabajo_Practoco_Proyecto_de_Software.Middleware;
 using System.Text.Json.Serialization;
+using Trabajo_Practoco_Proyecto_de_Software.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +41,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "Ticketing API",
         Version = "v1",
@@ -84,6 +85,7 @@ builder.Services.AddScoped<IGetUserByIdQueryHandler, GetUserByIdQueryHandler>();
 builder.Services.AddScoped<ILoginUserCommandHandler, LoginUserCommandHandler>();
 builder.Services.AddScoped<IConfirmPaymentCommandHandler, ConfirmPaymentCommandHandler>();
 builder.Services.AddScoped<ICancelReservationCommandHandler, CancelReservationCommandHandler>();
+builder.Services.AddScoped<IGetPagedEventsHandler, GetPagedEventsHandler>();
 
 builder.Services.AddHostedService<Infrastructure.Jobs.ReleaseExpiredReservationsJob>();
 
